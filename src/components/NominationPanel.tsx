@@ -51,7 +51,9 @@ export function NominationPanel({ player, onDraft, moneyRemaining }: NominationP
             {player.tier && (
               <>
                 <span className="text-slate-600">•</span>
-                <span className="px-2 py-0.5 bg-gradient-to-r from-blue-600/20 to-blue-700/20 text-blue-400 rounded border border-blue-500/30">Tier {player.tier}</span>
+                <span className="px-2 py-0.5 bg-gradient-to-r from-blue-600/20 to-blue-700/20 text-blue-400 rounded border border-blue-500/30">
+                  Tier {player.tier}
+                </span>
               </>
             )}
           </div>
@@ -112,33 +114,43 @@ export function NominationPanel({ player, onDraft, moneyRemaining }: NominationP
         <div className="space-y-2">
           <div className="relative h-10 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
             {/* Target marker */}
-            <div 
+            <div
               className="absolute top-0 bottom-0 w-1 bg-blue-400 z-10 shadow-lg shadow-blue-500/50"
               style={{ left: `${targetPercentage}%` }}
             />
-            
+
             {/* Current bid fill */}
-            <div 
+            <div
               className={`h-full transition-all duration-500 ${
-                valueIndicator.color === 'text-green-600' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
-                valueIndicator.color === 'text-yellow-600' ? 'bg-gradient-to-r from-yellow-500 to-amber-600' :
-                valueIndicator.color === 'text-orange-600' ? 'bg-gradient-to-r from-orange-500 to-red-600' :
-                'bg-gradient-to-r from-red-500 to-rose-600'
+                valueIndicator.color === 'text-green-600'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600'
+                  : valueIndicator.color === 'text-yellow-600'
+                    ? 'bg-gradient-to-r from-yellow-500 to-amber-600'
+                    : valueIndicator.color === 'text-orange-600'
+                      ? 'bg-gradient-to-r from-orange-500 to-red-600'
+                      : 'bg-gradient-to-r from-red-500 to-rose-600'
               }`}
               style={{ width: `${gaugePercentage}%` }}
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span className="text-slate-500">$0</span>
             <div className="text-center">
               <div className="text-blue-400">Target: ${player.adjustedValue}</div>
-              <div className={`${
-                valueIndicator.color === 'text-green-600' ? 'text-green-400' :
-                valueIndicator.color === 'text-yellow-600' ? 'text-yellow-400' :
-                valueIndicator.color === 'text-orange-600' ? 'text-orange-400' :
-                'text-red-400'
-              }`}>{valueIndicator.label}</div>
+              <div
+                className={`${
+                  valueIndicator.color === 'text-green-600'
+                    ? 'text-green-400'
+                    : valueIndicator.color === 'text-yellow-600'
+                      ? 'text-yellow-400'
+                      : valueIndicator.color === 'text-orange-600'
+                        ? 'text-orange-400'
+                        : 'text-red-400'
+                }`}
+              >
+                {valueIndicator.label}
+              </div>
             </div>
             <span className="text-slate-500">${Math.round(maxGaugeValue)}</span>
           </div>
@@ -152,14 +164,14 @@ export function NominationPanel({ player, onDraft, moneyRemaining }: NominationP
           >
             -1
           </button>
-          
+
           <input
             type="number"
             value={currentBid}
-            onChange={(e) => setCurrentBid(Math.max(1, Number(e.target.value)))}
+            onChange={e => setCurrentBid(Math.max(1, Number(e.target.value)))}
             className="flex-1 px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-center text-white focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
           />
-          
+
           <button
             onClick={() => setCurrentBid(currentBid + 1)}
             className="px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white hover:bg-slate-700 transition-all"
@@ -175,7 +187,7 @@ export function NominationPanel({ player, onDraft, moneyRemaining }: NominationP
           <div className="text-slate-400 mb-1">Original Value</div>
           <div className="text-white">${player.projectedValue}</div>
         </div>
-        
+
         <div className="p-3 bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 rounded-lg">
           <div className="text-slate-400 mb-1">Adjusted Value</div>
           <div className="flex items-center gap-2">
@@ -192,7 +204,8 @@ export function NominationPanel({ player, onDraft, moneyRemaining }: NominationP
       {/* Suggested Max Bid */}
       <div className="p-3 bg-gradient-to-r from-yellow-900/30 to-amber-900/30 border border-yellow-500/30 rounded-lg">
         <div className="text-yellow-400">
-          💡 Suggested max bid: <span className="text-white">${suggestedMaxBid}</span> (based on remaining budget)
+          💡 Suggested max bid: <span className="text-white">${suggestedMaxBid}</span> (based on
+          remaining budget)
         </div>
       </div>
 
@@ -204,7 +217,7 @@ export function NominationPanel({ player, onDraft, moneyRemaining }: NominationP
         >
           Add to My Team (${currentBid})
         </button>
-        
+
         <button
           onClick={() => onDraft(currentBid, 'other')}
           className="px-6 py-3 bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-xl hover:from-slate-600 hover:to-slate-700 transition-all border border-slate-600"

@@ -16,22 +16,42 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
       ...settings,
       rosterSpots: {
         ...settings.rosterSpots,
-        [position]: value
-      }
+        [position]: value,
+      },
     });
   };
 
   const totalRosterSpots = Object.values(settings.rosterSpots).reduce((a, b) => a + b, 0);
   const totalBudget = settings.numTeams * settings.budgetPerTeam;
 
-  const scoringTypes: Array<{ value: LeagueSettings['scoringType']; label: string; description: string }> = [
-    { value: 'rotisserie', label: 'Rotisserie', description: 'Cumulative stats ranked across categories' },
-    { value: 'h2h-categories', label: 'H2H Categories', description: 'Weekly matchups with category wins' },
+  const scoringTypes: Array<{
+    value: LeagueSettings['scoringType'];
+    label: string;
+    description: string;
+  }> = [
+    {
+      value: 'rotisserie',
+      label: 'Rotisserie',
+      description: 'Cumulative stats ranked across categories',
+    },
+    {
+      value: 'h2h-categories',
+      label: 'H2H Categories',
+      description: 'Weekly matchups with category wins',
+    },
     { value: 'h2h-points', label: 'H2H Points', description: 'Weekly matchups with point totals' },
   ];
 
-  const projectionSystems: Array<{ value: LeagueSettings['projectionSystem']; label: string; description: string }> = [
-    { value: 'steamer', label: 'Steamer', description: 'Popular projection system with conservative estimates' },
+  const projectionSystems: Array<{
+    value: LeagueSettings['projectionSystem'];
+    label: string;
+    description: string;
+  }> = [
+    {
+      value: 'steamer',
+      label: 'Steamer',
+      description: 'Popular projection system with conservative estimates',
+    },
     { value: 'batx', label: 'BatX', description: 'Advanced metrics-based projections' },
     { value: 'ja', label: 'JA', description: 'Custom projection algorithm' },
   ];
@@ -51,7 +71,9 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiIC8+PC9zdmc+')] opacity-20"></div>
             <div className="relative">
               <h1 className="text-white mb-2 drop-shadow-lg">⚾ Fantasy Baseball Auction Setup</h1>
-              <p className="text-slate-200">Configure your league parameters for the perfect draft</p>
+              <p className="text-slate-200">
+                Configure your league parameters for the perfect draft
+              </p>
             </div>
           </div>
 
@@ -62,25 +84,33 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                 { num: 1, label: 'League Format' },
                 { num: 2, label: 'Roster Config' },
                 { num: 3, label: 'Projections' },
-                { num: 4, label: 'Review' }
+                { num: 4, label: 'Review' },
               ].map((step, idx) => (
                 <div key={step.num} className="flex items-center flex-1">
                   <div className="flex flex-col items-center">
-                    <div className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
-                      currentStep >= step.num 
-                        ? 'bg-gradient-to-br from-red-600 to-red-700 text-white shadow-lg shadow-red-500/50 scale-110' 
-                        : 'bg-slate-800 text-slate-500 border border-slate-700'
-                    }`}>
+                    <div
+                      className={`flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
+                        currentStep >= step.num
+                          ? 'bg-gradient-to-br from-red-600 to-red-700 text-white shadow-lg shadow-red-500/50 scale-110'
+                          : 'bg-slate-800 text-slate-500 border border-slate-700'
+                      }`}
+                    >
                       {step.num}
                     </div>
-                    <span className={`mt-2 transition-colors ${currentStep >= step.num ? 'text-white' : 'text-slate-500'}`}>
+                    <span
+                      className={`mt-2 transition-colors ${currentStep >= step.num ? 'text-white' : 'text-slate-500'}`}
+                    >
                       {step.label}
                     </span>
                   </div>
                   {idx < 3 && (
-                    <div className={`flex-1 h-1 mx-4 rounded-full transition-all duration-300 ${
-                      currentStep > step.num ? 'bg-gradient-to-r from-red-600 to-red-700' : 'bg-slate-800'
-                    }`} />
+                    <div
+                      className={`flex-1 h-1 mx-4 rounded-full transition-all duration-300 ${
+                        currentStep > step.num
+                          ? 'bg-gradient-to-r from-red-600 to-red-700'
+                          : 'bg-slate-800'
+                      }`}
+                    />
                   )}
                 </div>
               ))}
@@ -93,13 +123,13 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                   <Zap className="w-6 h-6 text-red-500" />
                   League Format
                 </h2>
-                
+
                 <div>
                   <label className="block text-slate-300 mb-3">League Name</label>
                   <input
                     type="text"
                     value={settings.leagueName}
-                    onChange={(e) => setSettings({ ...settings, leagueName: e.target.value })}
+                    onChange={e => setSettings({ ...settings, leagueName: e.target.value })}
                     className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                     placeholder="Enter your league name"
                     required
@@ -111,25 +141,35 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                   <input
                     type="text"
                     value={settings.couchManagerRoomId}
-                    onChange={(e) => setSettings({ ...settings, couchManagerRoomId: e.target.value })}
+                    onChange={e => setSettings({ ...settings, couchManagerRoomId: e.target.value })}
                     className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                     placeholder="Enter Couch Manager auction room ID (optional)"
                   />
-                  <p className="text-slate-500 mt-2">Used for API integration with projection systems</p>
+                  <p className="text-slate-500 mt-2">
+                    Used for API integration with projection systems
+                  </p>
                 </div>
-                
+
                 <div>
                   <label className="block text-slate-300 mb-3">Number of Teams</label>
                   <input
                     type="number"
                     value={settings.numTeams}
-                    onChange={(e) => setSettings({ ...settings, numTeams: Math.min(30, Math.max(2, Number(e.target.value))) })}
+                    onChange={e =>
+                      setSettings({
+                        ...settings,
+                        numTeams: Math.min(30, Math.max(2, Number(e.target.value))),
+                      })
+                    }
                     className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                     min={2}
                     max={30}
                     placeholder="Enter 2-30 teams"
                   />
-                  <p className="text-slate-500 mt-2">Total league budget: <span className="text-emerald-400">${totalBudget.toLocaleString()}</span></p>
+                  <p className="text-slate-500 mt-2">
+                    Total league budget:{' '}
+                    <span className="text-emerald-400">${totalBudget.toLocaleString()}</span>
+                  </p>
                 </div>
 
                 <div>
@@ -137,7 +177,9 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                   <input
                     type="number"
                     value={settings.budgetPerTeam}
-                    onChange={(e) => setSettings({ ...settings, budgetPerTeam: Number(e.target.value) })}
+                    onChange={e =>
+                      setSettings({ ...settings, budgetPerTeam: Number(e.target.value) })
+                    }
                     className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                     min={100}
                     max={500}
@@ -147,7 +189,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                 <div>
                   <label className="block text-slate-300 mb-3">Scoring Type</label>
                   <div className="grid grid-cols-3 gap-3">
-                    {scoringTypes.map((type) => (
+                    {scoringTypes.map(type => (
                       <button
                         key={type.value}
                         onClick={() => setSettings({ ...settings, scoringType: type.value })}
@@ -157,7 +199,9 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                             : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
                         }`}
                       >
-                        <div className={`mb-1 ${settings.scoringType === type.value ? 'text-red-400' : 'text-slate-300'}`}>
+                        <div
+                          className={`mb-1 ${settings.scoringType === type.value ? 'text-red-400' : 'text-slate-300'}`}
+                        >
                           {type.label}
                         </div>
                         <div className="text-slate-500">{type.description}</div>
@@ -174,7 +218,8 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                 <div className="flex items-center justify-between">
                   <h2 className="text-white">Roster Configuration</h2>
                   <div className="text-slate-300">
-                    Total roster spots: <span className="text-emerald-400 text-2xl ml-2">{totalRosterSpots}</span>
+                    Total roster spots:{' '}
+                    <span className="text-emerald-400 text-2xl ml-2">{totalRosterSpots}</span>
                   </div>
                 </div>
 
@@ -184,13 +229,15 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                       <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
                       Hitters
                     </h3>
-                    {(['C', '1B', '2B', '3B', 'SS', 'OF', 'CI', 'MI', 'UTIL'] as const).map((pos) => (
+                    {(['C', '1B', '2B', '3B', 'SS', 'OF', 'CI', 'MI', 'UTIL'] as const).map(pos => (
                       <div key={pos} className="flex items-center justify-between group">
-                        <label className="text-slate-300 group-hover:text-white transition-colors">{pos}</label>
+                        <label className="text-slate-300 group-hover:text-white transition-colors">
+                          {pos}
+                        </label>
                         <input
                           type="number"
                           value={settings.rosterSpots[pos]}
-                          onChange={(e) => updateRosterSpot(pos, Number(e.target.value))}
+                          onChange={e => updateRosterSpot(pos, Number(e.target.value))}
                           className="w-20 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                           min={0}
                           max={10}
@@ -204,27 +251,31 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                       <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
                       Pitchers
                     </h3>
-                    {(['SP', 'RP', 'P'] as const).map((pos) => (
+                    {(['SP', 'RP', 'P'] as const).map(pos => (
                       <div key={pos} className="flex items-center justify-between group">
-                        <label className="text-slate-300 group-hover:text-white transition-colors">{pos}</label>
+                        <label className="text-slate-300 group-hover:text-white transition-colors">
+                          {pos}
+                        </label>
                         <input
                           type="number"
                           value={settings.rosterSpots[pos]}
-                          onChange={(e) => updateRosterSpot(pos, Number(e.target.value))}
+                          onChange={e => updateRosterSpot(pos, Number(e.target.value))}
                           className="w-20 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                           min={0}
                           max={15}
                         />
                       </div>
                     ))}
-                    
+
                     <div className="pt-4 border-t border-slate-700">
                       <div className="flex items-center justify-between group">
-                        <label className="text-slate-300 group-hover:text-white transition-colors">Bench</label>
+                        <label className="text-slate-300 group-hover:text-white transition-colors">
+                          Bench
+                        </label>
                         <input
                           type="number"
                           value={settings.rosterSpots.Bench}
-                          onChange={(e) => updateRosterSpot('Bench', Number(e.target.value))}
+                          onChange={e => updateRosterSpot('Bench', Number(e.target.value))}
                           className="w-20 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                           min={0}
                           max={10}
@@ -246,13 +297,14 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
 
                 <div className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-blue-500/30 rounded-xl p-4 mb-6">
                   <p className="text-blue-300">
-                    💡 Choose the projection system that will be used to calculate player values. 
-                    This determines the baseline for auction price calculations and inflation adjustments.
+                    💡 Choose the projection system that will be used to calculate player values.
+                    This determines the baseline for auction price calculations and inflation
+                    adjustments.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
-                  {projectionSystems.map((system) => (
+                  {projectionSystems.map(system => (
                     <button
                       key={system.value}
                       onClick={() => setSettings({ ...settings, projectionSystem: system.value })}
@@ -262,7 +314,9 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                           : 'border-slate-700 bg-slate-800/50 hover:border-slate-600 hover:scale-102'
                       }`}
                     >
-                      <div className={`mb-2 ${settings.projectionSystem === system.value ? 'text-red-400' : 'text-slate-300'}`}>
+                      <div
+                        className={`mb-2 ${settings.projectionSystem === system.value ? 'text-red-400' : 'text-slate-300'}`}
+                      >
                         {system.label}
                       </div>
                       <div className="text-slate-500">{system.description}</div>
@@ -279,7 +333,10 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                     <p>• Projections will be imported via API for all available players</p>
                     <p>• Auction values are calculated based on projected statistics</p>
                     <p>• Values adjust dynamically during the draft based on inflation</p>
-                    <p>• System: <span className="text-white">{settings.projectionSystem.toUpperCase()}</span></p>
+                    <p>
+                      • System:{' '}
+                      <span className="text-white">{settings.projectionSystem.toUpperCase()}</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -307,7 +364,9 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400">Scoring Type:</span>
-                      <span className="text-white capitalize">{settings.scoringType.replace('-', ' ')}</span>
+                      <span className="text-white capitalize">
+                        {settings.scoringType.replace('-', ' ')}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400">Projection System:</span>
@@ -328,13 +387,14 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                     <div className="pt-3 border-t border-slate-700">
                       <div className="text-slate-400 mb-2">Position Breakdown:</div>
                       <div className="grid grid-cols-3 gap-2">
-                        {Object.entries(settings.rosterSpots).map(([pos, count]) => (
-                          count > 0 && (
-                            <div key={pos} className="text-slate-300">
-                              {pos}: <span className="text-emerald-400">{count}</span>
-                            </div>
-                          )
-                        ))}
+                        {Object.entries(settings.rosterSpots).map(
+                          ([pos, count]) =>
+                            count > 0 && (
+                              <div key={pos} className="text-slate-300">
+                                {pos}: <span className="text-emerald-400">{count}</span>
+                              </div>
+                            )
+                        )}
                       </div>
                     </div>
                   </div>
@@ -346,7 +406,9 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                       <span className="text-white text-2xl">✓</span>
                     </div>
                     <div>
-                      <p className="text-emerald-300">Settings validated and ready to start draft</p>
+                      <p className="text-emerald-300">
+                        Settings validated and ready to start draft
+                      </p>
                       <p className="text-emerald-500">All configurations look good!</p>
                     </div>
                   </div>
@@ -365,7 +427,7 @@ export function SetupScreen({ onComplete }: SetupScreenProps) {
                   Back
                 </button>
               )}
-              
+
               <div className="ml-auto">
                 {currentStep < 4 ? (
                   <button

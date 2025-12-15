@@ -17,7 +17,9 @@ export function RosterPanel({ roster, settings, rosterNeedsRemaining }: RosterPa
       <div className="p-4 border-b border-slate-700 bg-gradient-to-r from-emerald-900/30 to-green-900/30">
         <h3 className="text-white flex items-center justify-between">
           <span>My Roster</span>
-          <span className="text-emerald-400">{roster.length}/{totalRosterSpots}</span>
+          <span className="text-emerald-400">
+            {roster.length}/{totalRosterSpots}
+          </span>
         </h3>
         <div className="text-slate-400 mt-1">
           ${moneySpent} spent / ${settings.budgetPerTeam - moneySpent} left
@@ -35,7 +37,7 @@ export function RosterPanel({ roster, settings, rosterNeedsRemaining }: RosterPa
           {(['C', '1B', '2B', '3B', 'SS', 'OF', 'CI', 'MI', 'UTIL'] as const).map(pos => {
             const playersAtPosition = roster.filter(p => p.positions.includes(pos));
             const needed = settings.rosterSpots[pos];
-            
+
             return (
               <div key={pos} className="bg-slate-800/50 border border-slate-700 rounded-lg p-2">
                 <div className="flex items-center justify-between mb-1">
@@ -49,7 +51,8 @@ export function RosterPanel({ roster, settings, rosterNeedsRemaining }: RosterPa
                 ) : (
                   playersAtPosition.map(player => (
                     <div key={player.id} className="text-white mt-1">
-                      {player.name} - <span className="text-emerald-400">${player.draftedPrice}</span>
+                      {player.name} -{' '}
+                      <span className="text-emerald-400">${player.draftedPrice}</span>
                     </div>
                   ))
                 )}
@@ -67,9 +70,9 @@ export function RosterPanel({ roster, settings, rosterNeedsRemaining }: RosterPa
           {(['SP', 'RP', 'P'] as const).map(pos => {
             const playersAtPosition = roster.filter(p => p.positions.includes(pos));
             const needed = settings.rosterSpots[pos];
-            
+
             if (needed === 0) return null;
-            
+
             return (
               <div key={pos} className="bg-slate-800/50 border border-slate-700 rounded-lg p-2">
                 <div className="flex items-center justify-between mb-1">
@@ -83,7 +86,8 @@ export function RosterPanel({ roster, settings, rosterNeedsRemaining }: RosterPa
                 ) : (
                   playersAtPosition.map(player => (
                     <div key={player.id} className="text-white mt-1">
-                      {player.name} - <span className="text-emerald-400">${player.draftedPrice}</span>
+                      {player.name} -{' '}
+                      <span className="text-emerald-400">${player.draftedPrice}</span>
                     </div>
                   ))
                 )}
@@ -100,7 +104,8 @@ export function RosterPanel({ roster, settings, rosterNeedsRemaining }: RosterPa
               <div className="flex items-center justify-between mb-1">
                 <span className="text-slate-400">BN</span>
                 <span className="text-slate-500">
-                  {roster.length - totalRosterSpots + settings.rosterSpots.Bench}/{settings.rosterSpots.Bench}
+                  {roster.length - totalRosterSpots + settings.rosterSpots.Bench}/
+                  {settings.rosterSpots.Bench}
                 </span>
               </div>
             </div>
@@ -112,13 +117,17 @@ export function RosterPanel({ roster, settings, rosterNeedsRemaining }: RosterPa
       <div className="p-4 border-t border-slate-700 bg-slate-800/50">
         <div className="text-slate-400 mb-2">Still Needed:</div>
         <div className="flex flex-wrap gap-2">
-          {Object.entries(rosterNeedsRemaining).map(([pos, count]) => (
-            count > 0 && (
-              <div key={pos} className="px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-300">
-                {pos}: {count}
-              </div>
-            )
-          ))}
+          {Object.entries(rosterNeedsRemaining).map(
+            ([pos, count]) =>
+              count > 0 && (
+                <div
+                  key={pos}
+                  className="px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-300"
+                >
+                  {pos}: {count}
+                </div>
+              )
+          )}
         </div>
       </div>
     </div>

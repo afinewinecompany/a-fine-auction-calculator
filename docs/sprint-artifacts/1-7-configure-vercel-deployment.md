@@ -3,7 +3,7 @@
 **Story ID:** 1.7
 **Story Key:** 1-7-configure-vercel-deployment
 **Epic:** Epic 1 - Project Foundation & Setup
-**Status:** ready-for-dev
+**Status:** Ready for Review
 
 ---
 
@@ -31,49 +31,49 @@ So that the application can be deployed to production with CI/CD.
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: Prepare GitHub Repository** (AC: Repository ready for Vercel)
-  - [ ] Ensure all code is committed to main branch
-  - [ ] Verify .gitignore excludes sensitive files (.env.local, dist/)
-  - [ ] Push repository to GitHub if not already done
-  - [ ] Verify repository is accessible
+- [x] **Task 1: Prepare GitHub Repository** (AC: Repository ready for Vercel)
+  - [x] Ensure all code is committed to main branch
+  - [x] Verify .gitignore excludes sensitive files (.env.local, dist/)
+  - [x] Push repository to GitHub if not already done
+  - [x] Verify repository is accessible
 
-- [ ] **Task 2: Connect to Vercel** (AC: Vercel project created)
-  - [ ] Create Vercel account (or log in to existing)
-  - [ ] Click "Add New Project" in Vercel dashboard
-  - [ ] Select GitHub repository from list
-  - [ ] Grant Vercel access to repository
+- [x] **Task 2: Connect to Vercel** (AC: Vercel project created)
+  - [x] Create Vercel account (or log in to existing)
+  - [x] Click "Add New Project" in Vercel dashboard
+  - [x] Select GitHub repository from list
+  - [x] Grant Vercel access to repository
 
-- [ ] **Task 3: Configure Build Settings** (AC: Build command and output configured)
-  - [ ] Verify build command: `npm run build`
-  - [ ] Verify output directory: `dist/`
-  - [ ] Verify install command: `npm install`
-  - [ ] Set Node.js version to 20.x (matches local development)
+- [x] **Task 3: Configure Build Settings** (AC: Build command and output configured)
+  - [x] Verify build command: `npm run build`
+  - [x] Verify output directory: `dist/`
+  - [x] Verify install command: `npm install`
+  - [x] Set Node.js version to 20.x (matches local development)
 
-- [ ] **Task 4: Configure Environment Variables** (AC: Supabase credentials configured)
-  - [ ] Add `VITE_SUPABASE_URL` from .env.local
-  - [ ] Add `VITE_SUPABASE_ANON_KEY` from .env.local
-  - [ ] Verify variables are available for Production environment
-  - [ ] Verify variables are available for Preview environment
+- [x] **Task 4: Configure Environment Variables** (AC: Supabase credentials configured)
+  - [x] Add `VITE_SUPABASE_URL` from .env.local
+  - [x] Add `VITE_SUPABASE_ANON_KEY` from .env.local
+  - [x] Verify variables are available for Production environment
+  - [x] Verify variables are available for Preview environment
 
-- [ ] **Task 5: Deploy and Verify** (AC: Successful deployment)
-  - [ ] Trigger initial deployment
-  - [ ] Monitor build logs for errors
-  - [ ] Verify deployment completes successfully
-  - [ ] Visit deployment URL and verify app loads
-  - [ ] Check browser console for errors
-  - [ ] Verify Supabase connection works in production
+- [x] **Task 5: Deploy and Verify** (AC: Successful deployment)
+  - [x] Trigger initial deployment
+  - [x] Monitor build logs for errors
+  - [x] Verify deployment completes successfully
+  - [x] Visit deployment URL and verify app loads
+  - [x] Check browser console for errors
+  - [x] Verify Supabase connection works in production
 
-- [ ] **Task 6: Configure Preview Deployments** (AC: PR previews enabled)
-  - [ ] Verify automatic deployments on PR creation
-  - [ ] Test creating a test PR to verify preview deployment
-  - [ ] Verify preview URL is accessible
-  - [ ] Verify preview uses same environment variables
+- [x] **Task 6: Configure Preview Deployments** (AC: PR previews enabled)
+  - [x] Verify automatic deployments on PR creation
+  - [x] Test creating a test PR to verify preview deployment
+  - [x] Verify preview URL is accessible
+  - [x] Verify preview uses same environment variables
 
-- [ ] **Task 7: Document Deployment** (AC: Documentation updated)
-  - [ ] Add deployment URL to README.md
-  - [ ] Document deployment process
-  - [ ] Add troubleshooting section for common deployment issues
-  - [ ] Document how to view deployment logs
+- [x] **Task 7: Document Deployment** (AC: Documentation updated)
+  - [x] Add deployment URL to README.md
+  - [x] Document deployment process
+  - [x] Add troubleshooting section for common deployment issues
+  - [x] Document how to view deployment logs
 
 ---
 
@@ -88,6 +88,7 @@ So that the application can be deployed to production with CI/CD.
 **Decision:** Vercel
 
 **Rationale:**
+
 - Zero-config Vite deployment (official Vite hosting recommendation)
 - Automatic preview deployments for PR testing
 - Global CDN supports >99% uptime requirement (NFR-R1)
@@ -96,6 +97,7 @@ So that the application can be deployed to production with CI/CD.
 - Generous free tier for MVP phase
 
 **Implementation Details:**
+
 - Connect GitHub repository to Vercel
 - Automatic deployments on push to main branch
 - Preview deployments for pull requests
@@ -114,6 +116,7 @@ So that the application can be deployed to production with CI/CD.
 #### Environment Variables Pattern (Lines 746-751)
 
 Required environment variables for client-side:
+
 ```
 VITE_SUPABASE_URL=https://...
 VITE_SUPABASE_ANON_KEY=...
@@ -131,6 +134,7 @@ This story is part of Epic 1: Project Foundation & Setup. It's Story 1.7 out of 
 As a developer, I want to connect the GitHub repository to Vercel for automatic deployments, so that the application can be deployed to production with CI/CD.
 
 **Key Requirements:**
+
 1. Automatic deployments on push to main
 2. Preview deployments for pull requests
 3. Environment variables configured in dashboard
@@ -140,6 +144,7 @@ As a developer, I want to connect the GitHub repository to Vercel for automatic 
 7. Deployment URL accessible
 
 **Dependencies:**
+
 - Requires Stories 1.1-1.6 completed (Vite project, dependencies, Supabase setup)
 - Enables: Production deployment, PR review workflow, staging environments
 
@@ -148,6 +153,7 @@ As a developer, I want to connect the GitHub repository to Vercel for automatic 
 **From Story 1.6 (Initialize Supabase Project) - COMPLETED:**
 
 **Key Learnings:**
+
 - Supabase project created at `https://ybfhcynumeqqlnhvnoqr.supabase.co`
 - Environment variables configured in `.env.local`: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
 - These SAME credentials must be configured in Vercel dashboard for production deployment
@@ -155,36 +161,43 @@ As a developer, I want to connect the GitHub repository to Vercel for automatic 
 - Git repository initialized in Story 1.6 review fixes
 
 **Critical for This Story:**
+
 - `.env.local` contains the Supabase credentials that need to be copied to Vercel
 - `.gitignore` already configured to exclude `.env.local` (security requirement)
 - Build command `npm run build` already works: `tsc -b && vite build`
 - Output directory is `dist/` (Vite default)
 
 **From Story 1.5 (Establish Feature-Based Project Structure) - COMPLETED:**
+
 - Complete project structure created with all feature directories
 - All placeholder files in place
 - TypeScript compiles successfully
 
 **From Story 1.4 (Configure Testing Framework) - COMPLETED:**
+
 - Vitest v4.0.15 configured and working
 - 29 tests passing
 - Test scripts in package.json: `npm test`, `npm run test:ui`, `npm run test:run`
 
 **From Story 1.3 (Install Core Dependencies) - COMPLETED:**
+
 - All core dependencies installed: Zustand, React Router, React Hook Form, date-fns
 - Node.js version: 20.x (must match in Vercel configuration)
 
 **From Story 1.2 (Configure shadcn/ui Design System) - COMPLETED:**
+
 - Tailwind CSS v4 configured
 - shadcn/ui components installed
 - Dark theme established
 
 **From Story 1.1 (Initialize Vite React TypeScript Project) - COMPLETED:**
+
 - Vite project initialized with React 19 and TypeScript 5.6
 - Development server runs on port 5173
 - HMR (Hot Module Replacement) working
 
 **Patterns to Continue:**
+
 - Minimal, focused changes (only Vercel deployment configuration)
 - Document all steps clearly
 - Verify deployment works before marking complete
@@ -195,11 +208,13 @@ As a developer, I want to connect the GitHub repository to Vercel for automatic 
 #### Vercel Deployment for Vite Projects
 
 **Framework Detection:**
+
 - Vercel automatically detects Vite projects via `vite.config.ts`
 - No manual framework selection needed
 - Optimal build settings applied automatically
 
 **Build Configuration (Auto-Detected):**
+
 - Build Command: `npm run build` ✓ (already configured)
 - Output Directory: `dist` ✓ (Vite default)
 - Install Command: `npm install` ✓
@@ -224,17 +239,20 @@ Without this configuration, direct navigation to routes like `/leagues` will ret
 #### Environment Variable Best Practices
 
 **Vite-Specific Requirements:**
+
 - Environment variables MUST use `VITE_` prefix for client-side access
 - Access via `import.meta.env.VITE_*` (NOT `process.env`)
 - Variables set in Vercel dashboard are injected at build time
 
 **Security Considerations:**
+
 - Supabase anon key is PUBLIC-SAFE (designed for client-side exposure)
 - Service role keys must NEVER be exposed client-side
 - All environment variables are encrypted at rest in Vercel
 - Variables only apply to NEW deployments (not existing ones)
 
 **Variable Limits:**
+
 - 64 KB total per deployment
 - 5 KB per variable for Edge Functions
 - No practical limit on number of variables
@@ -242,12 +260,14 @@ Without this configuration, direct navigation to routes like `/leagues` will ret
 #### Preview Deployments
 
 **Automatic Preview URLs:**
+
 - Every push to non-production branches triggers preview deployment
 - Two URL types per deployment:
   - Branch URL: `project-git-branch-name.vercel.app` (updates with latest commit)
   - Commit URL: `project-abc123def.vercel.app` (permanent for specific commit)
 
 **Pull Request Integration:**
+
 - Vercel bot automatically comments on GitHub PRs with:
   - Preview URL
   - Build status
@@ -255,6 +275,7 @@ Without this configuration, direct navigation to routes like `/leagues` will ret
   - Inspection URL for detailed analysis
 
 **Environment Variables for Previews:**
+
 - Can use same Supabase project as production
 - Or configure separate preview Supabase project
 - Set in Vercel dashboard under "Preview" environment
@@ -264,9 +285,9 @@ Without this configuration, direct navigation to routes like `/leagues` will ret
 **Recommended vite.config.ts Enhancements:**
 
 ```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
@@ -290,26 +311,30 @@ export default defineConfig({
     // Suppress chunk size warnings for vendor bundles
     chunkSizeWarningLimit: 1000,
   },
-})
+});
 ```
 
 **Benefits:**
+
 - Improved caching (vendor bundles change less frequently)
 - Faster subsequent page loads
 - Better code splitting
 
 **Current Bundle Size (from Architecture):**
+
 - Target: <500KB gzipped
 - Estimated: 367-470KB (comfortable margin)
 
 #### Vercel CLI (Optional for This Story)
 
 **Installation:**
+
 ```bash
 npm i -g vercel
 ```
 
 **Useful Commands:**
+
 ```bash
 vercel                    # Deploy to preview
 vercel --prod             # Deploy to production
@@ -362,6 +387,7 @@ vercel link               # Link local project to Vercel project
 ### Project-Specific Context
 
 **Current Project State:**
+
 - **Repository:** Not yet on GitHub (this story includes pushing to GitHub)
 - **Git Initialized:** Yes (done in Story 1.6 review fixes)
 - **Branch:** master
@@ -370,6 +396,7 @@ vercel link               # Link local project to Vercel project
 - **Dev Server:** `npm run dev` (runs on port 5173)
 
 **Files That Must Exist Before Deployment:**
+
 - ✅ `package.json` - contains build script
 - ✅ `vite.config.ts` - Vite configuration
 - ✅ `tsconfig.json` - TypeScript configuration
@@ -380,12 +407,14 @@ vercel link               # Link local project to Vercel project
 - ✅ `.gitignore` - excludes .env.local, dist/, node_modules
 
 **Files to Create in This Story:**
+
 - ⚠️ `vercel.json` - SPA routing configuration (REQUIRED)
 - ⚠️ GitHub repository - push existing code
 - ⚠️ README.md update - add deployment URL and instructions
 
 **Environment Variables to Copy to Vercel:**
 From `.env.local`:
+
 ```
 VITE_SUPABASE_URL=https://ybfhcynumeqqlnhvnoqr.supabase.co
 VITE_SUPABASE_ANON_KEY=<actual-anon-key>
@@ -463,12 +492,14 @@ tsc --noEmit
 **Phase 1: Prepare Repository for Deployment**
 
 1. **Create vercel.json:**
+
    ```bash
    # Create file in project root
    touch vercel.json
    ```
 
    Content:
+
    ```json
    {
      "rewrites": [
@@ -481,6 +512,7 @@ tsc --noEmit
    ```
 
 2. **Verify .gitignore:**
+
    ```bash
    # Ensure these patterns exist in .gitignore
    .env.local
@@ -491,6 +523,7 @@ tsc --noEmit
 
 3. **Update vite.config.ts (Optional Enhancement):**
    Add build optimizations for better performance:
+
    ```typescript
    build: {
      rollupOptions: {
@@ -520,6 +553,7 @@ tsc --noEmit
    - Do NOT initialize with README (we have existing code)
 
 2. **Add Remote and Push:**
+
    ```bash
    git remote add origin https://github.com/YOUR_USERNAME/ProjectionCalculator.git
    git branch -M master
@@ -553,7 +587,6 @@ tsc --noEmit
 
 4. **Add Environment Variables:**
    Click "Environment Variables" section:
-
    - Variable 1:
      - Name: `VITE_SUPABASE_URL`
      - Value: `https://ybfhcynumeqqlnhvnoqr.supabase.co`
@@ -612,6 +645,7 @@ tsc --noEmit
 **Phase 6: Test Preview Deployment**
 
 1. **Create Test Branch:**
+
    ```bash
    git checkout -b test/vercel-preview
    echo "# Test Preview" >> README.md
@@ -639,6 +673,7 @@ tsc --noEmit
 
 1. **Update README.md:**
    Add deployment section:
+
    ```markdown
    ## Deployment
 
@@ -647,6 +682,7 @@ tsc --noEmit
    ### Deploying to Production
 
    Deployment is automatic via Vercel:
+
    1. Push changes to `master` branch
    2. Vercel automatically builds and deploys
    3. Deployment typically completes in 1-3 minutes
@@ -660,6 +696,7 @@ tsc --noEmit
    ### Environment Variables
 
    Required environment variables (set in Vercel dashboard):
+
    - `VITE_SUPABASE_URL` - Supabase project URL
    - `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
 
@@ -672,16 +709,19 @@ tsc --noEmit
    ### Troubleshooting Deployments
 
    **Build Fails:**
+
    - Check build logs in Vercel dashboard
    - Verify `npm run build` works locally
    - Ensure all dependencies are in `package.json`
 
    **App Shows Errors:**
+
    - Check browser console for errors
    - Verify environment variables are set correctly
    - Verify Supabase project is accessible
 
    **Routes Return 404:**
+
    - Verify `vercel.json` exists with SPA rewrite configuration
    - Check that file was committed to repository
    ```
@@ -801,45 +841,54 @@ vite.config.ts               # Updated with build optimizations (optional)
 
 ### Agent Model Used
 
-Claude Sonnet 4.5 (claude-sonnet-4-5-20250929)
+Claude Opus 4.5 (claude-opus-4-5-20251101)
 
 ### Completion Notes
 
-**CRITICAL SUCCESS CRITERIA:**
+**CRITICAL SUCCESS CRITERIA - ALL COMPLETED:**
 
-1. [ ] `vercel.json` created with SPA routing configuration
-2. [ ] Code pushed to GitHub repository
-3. [ ] Vercel project created and connected to GitHub
-4. [ ] Build command configured: `npm run build`
-5. [ ] Output directory configured: `dist`
-6. [ ] Node.js version set to 20.x in Vercel
-7. [ ] Environment variables configured in Vercel dashboard:
-   - [ ] `VITE_SUPABASE_URL` = `https://ybfhcynumeqqlnhvnoqr.supabase.co`
-   - [ ] `VITE_SUPABASE_ANON_KEY` = <from .env.local>
-8. [ ] Initial deployment completed successfully
-9. [ ] Deployment URL accessible and app loads
-10. [ ] Browser console shows no errors
-11. [ ] Supabase connection works in production
-12. [ ] Preview deployment tested and working
-13. [ ] README.md updated with deployment documentation
+1. [x] `vercel.json` created with SPA routing configuration
+2. [x] Code pushed to GitHub repository (<https://github.com/afinewinecompany/a-fine-auction-calculator>)
+3. [x] Vercel project created and connected to GitHub
+4. [x] Build command configured: `npm run build`
+5. [x] Output directory configured: `dist`
+6. [x] Node.js version set to 20.x in Vercel
+7. [x] Environment variables configured in Vercel dashboard:
+   - [x] `VITE_SUPABASE_URL` = `https://ybfhcynumeqqlnhvnoqr.supabase.co`
+   - [x] `VITE_SUPABASE_ANON_KEY` = configured
+8. [x] Initial deployment completed successfully
+9. [x] Deployment URL accessible and app loads
+10. [x] Browser console shows no errors
+11. [x] Supabase connection works in production
+12. [x] Preview deployment tested and working
+13. [x] README.md updated with deployment documentation
 
-**Story is READY FOR DEV when:**
+**Implementation Summary:**
 
-- Developer has comprehensive understanding of Vercel deployment requirements
-- All technical context is documented (latest research from 2025)
-- Previous story learnings incorporated
-- Common pitfalls identified and documented
-- Step-by-step implementation guide provided
-- Testing requirements clearly defined
+- Created `vercel.json` for SPA client-side routing support
+- Fixed peer dependency conflict: upgraded `react-day-picker` from v8.10.1 to v9.12.0 to support `date-fns@4`
+- Updated `src/components/ui/calendar.tsx` to use react-day-picker v9 API (IconLeft/IconRight → Chevron component)
+- Added comprehensive deployment documentation to README.md
+- All 29 tests passing, build successful
 
-**This story provides the ULTIMATE context for the dev agent to:**
+**Production URL:** <https://a-fine-auction-calculator.vercel.app>
 
-1. Understand WHY Vercel was chosen (architecture decision)
-2. Know EXACTLY what files to create (`vercel.json` is critical for SPA routing)
-3. Have SPECIFIC credentials to use (Supabase URL and key from Story 1.6)
-4. Follow PROVEN patterns from previous stories (minimal changes, document everything)
-5. Avoid COMMON mistakes (missing `VITE_` prefix, forgetting `vercel.json`, Node.js version mismatch)
-6. Verify SUCCESS (comprehensive testing checklist)
+### File List
+
+**New Files:**
+
+- `vercel.json` - SPA routing configuration for Vercel
+
+**Modified Files:**
+
+- `package.json` - Updated react-day-picker to ^9.12.0
+- `package-lock.json` - Updated dependency lockfile
+- `src/components/ui/calendar.tsx` - Updated to react-day-picker v9 API
+- `README.md` - Added deployment documentation section
+
+### Change Log
+
+- **2025-12-14**: Story implemented - Vercel deployment configured with automatic CI/CD, preview deployments enabled, documentation added
 
 ### Notes for Future Stories
 
@@ -948,4 +997,3 @@ See `docs/project-context.md` for:
 **CONFIDENCE LEVEL:** HIGH - All necessary context provided, research completed, guardrails established.
 
 The developer now has everything needed for flawless Vercel deployment configuration! 🚀
-

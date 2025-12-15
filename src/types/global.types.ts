@@ -70,16 +70,7 @@ export interface PositionRequirements {
 // Player Types
 // =============================================================================
 
-export type PlayerPosition =
-  | 'C'
-  | '1B'
-  | '2B'
-  | '3B'
-  | 'SS'
-  | 'OF'
-  | 'DH'
-  | 'SP'
-  | 'RP';
+export type PlayerPosition = 'C' | '1B' | '2B' | '3B' | 'SS' | 'OF' | 'DH' | 'SP' | 'RP';
 
 export interface Player {
   id: string;

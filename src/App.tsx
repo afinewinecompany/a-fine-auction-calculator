@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LeagueSettings, Player, SavedLeague, UserData } from './lib/types';
+import { LeagueSettings, Player, SavedLeague, UserData, DraftedPlayer } from './lib/types';
 import { generateMockPlayers } from './lib/mockData';
 import { LandingPage } from './components/LandingPage';
 import { LoginPage } from './components/LoginPage';
@@ -15,7 +15,7 @@ export default function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [currentLeague, setCurrentLeague] = useState<SavedLeague | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
-  const [finalRoster, setFinalRoster] = useState<any[]>([]);
+  const [finalRoster, setFinalRoster] = useState<DraftedPlayer[]>([]);
 
   // Load user data from localStorage
   useEffect(() => {
@@ -34,20 +34,23 @@ export default function App() {
     }
   }, [userData]);
 
-  const handleLogin = (email: string, authProvider: 'email' | 'google', googleData?: { name: string; picture: string }) => {
+  const handleLogin = (
+    email: string,
+    authProvider: 'email' | 'google',
+    googleData?: { name: string; picture: string }
+  ) => {
     // Derive username from email or use Google name
-    const username = authProvider === 'google' && googleData 
-      ? googleData.name 
-      : email.split('@')[0];
+    const username =
+      authProvider === 'google' && googleData ? googleData.name : email.split('@')[0];
 
     const newUserData: UserData = {
       username,
       email,
       leagues: [],
       authProvider,
-      profilePicture: googleData?.picture
+      profilePicture: googleData?.picture,
     };
-    
+
     setUserData(newUserData);
     setCurrentScreen('leagues');
   };
@@ -73,14 +76,14 @@ export default function App() {
       players: generateMockPlayers(),
       createdAt: new Date().toISOString(),
       lastModified: new Date().toISOString(),
-      status: 'drafting'
+      status: 'drafting',
     };
 
     // Add league to user's leagues
     if (userData) {
       const updatedUser = {
         ...userData,
-        leagues: [...userData.leagues, newLeague]
+        leagues: [...userData.leagues, newLeague],
       };
       setUserData(updatedUser);
     }
@@ -93,10 +96,10 @@ export default function App() {
   const handleContinueDraft = (league: SavedLeague) => {
     setCurrentLeague(league);
     setPlayers(league.players);
-    
+
     if (league.status === 'complete') {
-      const myTeam = league.players.filter(p => p.status === 'onMyTeam');
-      setFinalRoster(myTeam as any);
+      const myTeam = league.players.filter((p): p is DraftedPlayer => p.status === 'onMyTeam');
+      setFinalRoster(myTeam);
       setCurrentScreen('analysis');
     } else {
       setCurrentScreen('draft');
@@ -107,7 +110,7 @@ export default function App() {
     if (userData) {
       const updatedUser = {
         ...userData,
-        leagues: userData.leagues.filter(l => l.id !== leagueId)
+        leagues: userData.leagues.filter(l => l.id !== leagueId),
       };
       setUserData(updatedUser);
     }
@@ -115,8 +118,8 @@ export default function App() {
 
   const handleDraftComplete = () => {
     // Get the drafted players from the draft room
-    const myTeam = players.filter(p => p.status === 'onMyTeam');
-    setFinalRoster(myTeam as any);
+    const myTeam = players.filter((p): p is DraftedPlayer => p.status === 'onMyTeam');
+    setFinalRoster(myTeam);
 
     // Update league status
     if (currentLeague && userData) {
@@ -124,14 +127,12 @@ export default function App() {
         ...currentLeague,
         players,
         lastModified: new Date().toISOString(),
-        status: 'complete'
+        status: 'complete',
       };
 
       const updatedUser = {
         ...userData,
-        leagues: userData.leagues.map(l => 
-          l.id === currentLeague.id ? updatedLeague : l
-        )
+        leagues: userData.leagues.map(l => (l.id === currentLeague.id ? updatedLeague : l)),
       };
 
       setUserData(updatedUser);
@@ -155,14 +156,12 @@ export default function App() {
         const updatedLeague: SavedLeague = {
           ...currentLeague,
           players,
-          lastModified: new Date().toISOString()
+          lastModified: new Date().toISOString(),
         };
 
         const updatedUser = {
           ...userData,
-          leagues: userData.leagues.map(l => 
-            l.id === currentLeague.id ? updatedLeague : l
-          )
+          leagues: userData.leagues.map(l => (l.id === currentLeague.id ? updatedLeague : l)),
         };
 
         setUserData(updatedUser);
@@ -179,10 +178,7 @@ export default function App() {
       )}
 
       {currentScreen === 'login' && (
-        <LoginPage
-          onLogin={handleLogin}
-          onBack={() => setCurrentScreen('landing')}
-        />
+        <LoginPage onLogin={handleLogin} onBack={() => setCurrentScreen('landing')} />
       )}
 
       {currentScreen === 'leagues' && userData && (
@@ -197,9 +193,7 @@ export default function App() {
         />
       )}
 
-      {currentScreen === 'setup' && (
-        <SetupScreen onComplete={handleSetupComplete} />
-      )}
+      {currentScreen === 'setup' && <SetupScreen onComplete={handleSetupComplete} />}
 
       {currentScreen === 'draft' && currentLeague && (
         <DraftRoom

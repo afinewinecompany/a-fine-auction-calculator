@@ -11,27 +11,30 @@ interface PostDraftAnalysisProps {
 export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnalysisProps) {
   const stats = calculateTeamProjectedStats(roster);
   const moneyRemaining = settings.budgetPerTeam - stats.totalSpent;
-  
+
   // Calculate value metrics
   const totalValue = roster.reduce((sum, p) => sum + p.adjustedValue, 0);
   const totalCost = roster.reduce((sum, p) => sum + p.draftedPrice, 0);
   const valueGained = totalValue - totalCost;
-  
+
   // Sort roster by price (highest first)
   const sortedByPrice = [...roster].sort((a, b) => b.draftedPrice - a.draftedPrice);
-  
+
   // Best values (biggest positive difference)
   const bestValues = [...roster]
     .map(p => ({ ...p, value: p.adjustedValue - p.draftedPrice }))
     .sort((a, b) => b.value - a.value)
     .slice(0, 5);
-  
+
   // Calculate position breakdown
-  const positionCounts = roster.reduce((acc, p) => {
-    const pos = p.positions[0];
-    acc[pos] = (acc[pos] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const positionCounts = roster.reduce(
+    (acc, p) => {
+      const pos = p.positions[0];
+      acc[pos] = (acc[pos] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
@@ -43,7 +46,7 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
               <Trophy className="w-8 h-8 text-yellow-600" />
               <h1 className="text-gray-900">Draft Complete!</h1>
             </div>
-            <p className="text-gray-600">Here's how your draft went</p>
+            <p className="text-gray-600">Here&apos;s how your draft went</p>
           </div>
 
           {/* Summary Cards */}
@@ -68,11 +71,13 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
               <div className="text-gray-500 mt-1">Adjusted value sum</div>
             </div>
 
-            <div className={`p-6 rounded-lg border ${
-              valueGained > 0 
-                ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200' 
-                : 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200'
-            }`}>
+            <div
+              className={`p-6 rounded-lg border ${
+                valueGained > 0
+                  ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200'
+                  : 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200'
+              }`}
+            >
               <div className="text-gray-600 mb-2">Value Gained</div>
               <div className={valueGained > 0 ? 'text-green-700' : 'text-red-700'}>
                 {valueGained > 0 ? '+' : ''}${valueGained}
@@ -91,9 +96,12 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
                   {sortedByPrice.map((player, index) => {
                     const valueGained = player.adjustedValue - player.draftedPrice;
                     const isPitcher = player.positions.some(p => ['SP', 'RP'].includes(p));
-                    
+
                     return (
-                      <div key={player.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                      <div
+                        key={player.id}
+                        className="p-3 bg-gray-50 rounded-lg border border-gray-200"
+                      >
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <div className="text-gray-900">
@@ -107,7 +115,8 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
                             <div className="text-gray-900">${player.draftedPrice}</div>
                             {valueGained !== 0 && (
                               <div className={valueGained > 0 ? 'text-green-600' : 'text-red-600'}>
-                                {valueGained > 0 ? '+' : ''}{valueGained}
+                                {valueGained > 0 ? '+' : ''}
+                                {valueGained}
                               </div>
                             )}
                           </div>
@@ -157,7 +166,10 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
                 </h2>
                 <div className="space-y-2">
                   {bestValues.map((player, index) => (
-                    <div key={player.id} className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div
+                      key={player.id}
+                      className="p-3 bg-green-50 border border-green-200 rounded-lg"
+                    >
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-gray-900">
@@ -167,9 +179,7 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
                             ${player.draftedPrice} (Value: ${player.adjustedValue})
                           </div>
                         </div>
-                        <div className="text-green-700">
-                          +${player.value}
-                        </div>
+                        <div className="text-green-700">+${player.value}</div>
                       </div>
                     </div>
                   ))}
@@ -212,27 +222,38 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
               {/* Draft Grade */}
               <div>
                 <h3 className="text-gray-900 mb-3">Draft Grade</h3>
-                <div className={`p-6 rounded-lg text-center ${
-                  valueGained > 20 ? 'bg-green-100 border-2 border-green-300' :
-                  valueGained > 0 ? 'bg-blue-100 border-2 border-blue-300' :
-                  valueGained > -20 ? 'bg-yellow-100 border-2 border-yellow-300' :
-                  'bg-red-100 border-2 border-red-300'
-                }`}>
-                  <div className={`text-6xl mb-2 ${
-                    valueGained > 20 ? 'text-green-700' :
-                    valueGained > 0 ? 'text-blue-700' :
-                    valueGained > -20 ? 'text-yellow-700' :
-                    'text-red-700'
-                  }`}>
-                    {valueGained > 20 ? 'A' :
-                     valueGained > 0 ? 'B' :
-                     valueGained > -20 ? 'C' : 'D'}
+                <div
+                  className={`p-6 rounded-lg text-center ${
+                    valueGained > 20
+                      ? 'bg-green-100 border-2 border-green-300'
+                      : valueGained > 0
+                        ? 'bg-blue-100 border-2 border-blue-300'
+                        : valueGained > -20
+                          ? 'bg-yellow-100 border-2 border-yellow-300'
+                          : 'bg-red-100 border-2 border-red-300'
+                  }`}
+                >
+                  <div
+                    className={`text-6xl mb-2 ${
+                      valueGained > 20
+                        ? 'text-green-700'
+                        : valueGained > 0
+                          ? 'text-blue-700'
+                          : valueGained > -20
+                            ? 'text-yellow-700'
+                            : 'text-red-700'
+                    }`}
+                  >
+                    {valueGained > 20 ? 'A' : valueGained > 0 ? 'B' : valueGained > -20 ? 'C' : 'D'}
                   </div>
                   <div className="text-gray-700">
-                    {valueGained > 20 ? 'Excellent draft! Great value across the board.' :
-                     valueGained > 0 ? 'Good draft with solid value.' :
-                     valueGained > -20 ? 'Decent draft, some overpays but competitive.' :
-                     'Challenging draft with multiple overpays.'}
+                    {valueGained > 20
+                      ? 'Excellent draft! Great value across the board.'
+                      : valueGained > 0
+                        ? 'Good draft with solid value.'
+                        : valueGained > -20
+                          ? 'Decent draft, some overpays but competitive.'
+                          : 'Challenging draft with multiple overpays.'}
                   </div>
                 </div>
               </div>
@@ -248,7 +269,7 @@ export function PostDraftAnalysis({ roster, settings, onRestart }: PostDraftAnal
               <Download className="w-4 h-4" />
               Print/Export
             </button>
-            
+
             <button
               onClick={onRestart}
               className="px-8 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

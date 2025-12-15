@@ -17,18 +17,18 @@ Each feature is self-contained with the following subdirectories:
 
 ## Features
 
-| Feature | Description |
-|---------|-------------|
-| `auth/` | User authentication (login, register, session management) |
-| `inflation/` | Inflation rate management (calculations, tracking, history) |
+| Feature          | Description                                                  |
+| ---------------- | ------------------------------------------------------------ |
+| `auth/`          | User authentication (login, register, session management)    |
+| `inflation/`     | Inflation rate management (calculations, tracking, history)  |
 | `couch-manager/` | Couch Managers API integration (sync, connection management) |
-| `leagues/` | League management (create, edit, delete, settings) |
-| `teams/` | Team management (roster, budget, calculations) |
-| `players/` | Player auctions & stats (search, filter, auction entry) |
-| `draft/` | Draft preparation (draft board, queue, VBR rankings) |
-| `projections/` | Projections & calculations (formulas, comparisons) |
-| `data-exchange/` | Data import/export (CSV, Excel, JSON parsers) |
-| `profile/` | User profile management (settings, preferences) |
+| `leagues/`       | League management (create, edit, delete, settings)           |
+| `teams/`         | Team management (roster, budget, calculations)               |
+| `players/`       | Player auctions & stats (search, filter, auction entry)      |
+| `draft/`         | Draft preparation (draft board, queue, VBR rankings)         |
+| `projections/`   | Projections & calculations (formulas, comparisons)           |
+| `data-exchange/` | Data import/export (CSV, Excel, JSON parsers)                |
+| `profile/`       | User profile management (settings, preferences)              |
 
 ## Design Principles
 
@@ -57,11 +57,13 @@ Each feature is self-contained with the following subdirectories:
 ## Adding a New Feature
 
 1. Create the feature directory structure:
+
    ```bash
    mkdir -p src/features/{feature}/{components,hooks,stores,types,utils}
    ```
 
 2. Create the corresponding test directory:
+
    ```bash
    mkdir -p tests/features/{feature}
    ```

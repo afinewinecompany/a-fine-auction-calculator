@@ -13,9 +13,11 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPosition, setFilterPosition] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'available'>('available');
-  const [sortBy, setSortBy] = useState<'name' | 'projectedValue' | 'adjustedValue'>('adjustedValue');
+  const [sortBy, setSortBy] = useState<'name' | 'projectedValue' | 'adjustedValue'>(
+    'adjustedValue'
+  );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  
+
   // Track bid values and my team checkboxes for each player
   const [bidValues, setBidValues] = useState<Record<string, number>>({});
   const [myTeamChecks, setMyTeamChecks] = useState<Record<string, boolean>>({});
@@ -33,7 +35,7 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
     const bidValue = bidValues[player.id] || 1;
     const isMyTeam = myTeamChecks[player.id] || false;
     onDraftPlayer(player, bidValue, isMyTeam ? 'me' : 'other');
-    
+
     // Clear the bid value and checkbox for this player
     setBidValues(prev => {
       const next = { ...prev };
@@ -61,16 +63,16 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
       return true;
     })
     .sort((a, b) => {
-      let aVal: string | number = a[sortBy];
-      let bVal: string | number = b[sortBy];
-      
+      const aVal: string | number = a[sortBy];
+      const bVal: string | number = b[sortBy];
+
       if (sortBy === 'name') {
-        return sortOrder === 'asc' 
+        return sortOrder === 'asc'
           ? (aVal as string).localeCompare(bVal as string)
           : (bVal as string).localeCompare(aVal as string);
       }
-      
-      return sortOrder === 'asc' 
+
+      return sortOrder === 'asc'
         ? (aVal as number) - (bVal as number)
         : (bVal as number) - (aVal as number);
     });
@@ -99,10 +101,10 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
             type="text"
             placeholder="Search players..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
           />
-          
+
           <button
             onClick={() => setFilterStatus(filterStatus === 'all' ? 'available' : 'all')}
             className={`px-4 py-2 rounded-lg transition-all ${
@@ -165,14 +167,14 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
 
       {/* Player List */}
       <div className="flex-1 overflow-y-auto">
-        {filteredPlayers.map((player) => {
+        {filteredPlayers.map(player => {
           const isPitcher = player.positions.some(p => ['SP', 'RP'].includes(p));
           const keyStats = isPitcher
             ? `${player.projectedStats.W}W ${player.projectedStats.K}K ${player.projectedStats.ERA?.toFixed(2)}ERA`
             : `${player.projectedStats.HR}HR ${player.projectedStats.RBI}RBI ${player.projectedStats.AVG?.toFixed(3)}AVG`;
 
           const valueChange = player.adjustedValue - player.projectedValue;
-          const valueIndicator = player.draftedPrice 
+          const valueIndicator = player.draftedPrice
             ? getValueIndicator(player.draftedPrice, player.adjustedValue)
             : null;
 
@@ -183,40 +185,34 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
             <div
               key={player.id}
               className={`grid grid-cols-12 gap-3 px-4 py-3 border-b border-slate-800 hover:bg-gradient-to-r hover:from-blue-900/20 hover:to-emerald-900/20 transition-all ${
-                player.status === 'onMyTeam' ? 'bg-gradient-to-r from-emerald-900/30 to-green-900/30 border-emerald-700/50' : ''
+                player.status === 'onMyTeam'
+                  ? 'bg-gradient-to-r from-emerald-900/30 to-green-900/30 border-emerald-700/50'
+                  : ''
               } ${player.status === 'drafted' ? 'opacity-50' : ''}`}
             >
-              <div 
-                className="col-span-3 cursor-pointer"
-                onClick={() => onPlayerClick(player)}
-              >
-                <div className="text-white hover:text-emerald-400 transition-colors">{player.name}</div>
-                {player.tier && (
-                  <div className="text-slate-500">Tier {player.tier}</div>
-                )}
+              <div className="col-span-3 cursor-pointer" onClick={() => onPlayerClick(player)}>
+                <div className="text-white hover:text-emerald-400 transition-colors">
+                  {player.name}
+                </div>
+                {player.tier && <div className="text-slate-500">Tier {player.tier}</div>}
               </div>
-              
-              <div className="col-span-2 text-slate-400">
-                {player.positions.join(', ')}
-              </div>
-              
-              <div className="col-span-1 text-slate-400">
-                ${player.projectedValue}
-              </div>
-              
+
+              <div className="col-span-2 text-slate-400">{player.positions.join(', ')}</div>
+
+              <div className="col-span-1 text-slate-400">${player.projectedValue}</div>
+
               <div className="col-span-1">
                 <div className="text-emerald-400">${player.adjustedValue}</div>
                 {valueChange !== 0 && (
                   <div className={`${valueChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {valueChange > 0 ? '+' : ''}{valueChange}
+                    {valueChange > 0 ? '+' : ''}
+                    {valueChange}
                   </div>
                 )}
               </div>
-              
-              <div className="col-span-2 text-slate-400">
-                {keyStats}
-              </div>
-              
+
+              <div className="col-span-2 text-slate-400">{keyStats}</div>
+
               {/* Bid Value Input */}
               <div className="col-span-1 flex items-center justify-center">
                 {player.status === 'available' ? (
@@ -226,7 +222,7 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
                     pattern="[0-9]*"
                     placeholder="0"
                     value={currentBidValue}
-                    onChange={(e) => {
+                    onChange={e => {
                       const value = e.target.value;
                       // Allow empty string or numbers only
                       if (value === '' || /^\d+$/.test(value)) {
@@ -239,24 +235,29 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
                         } else {
                           setBidValues(prev => ({
                             ...prev,
-                            [player.id]: Math.max(1, Number(value))
+                            [player.id]: Math.max(1, Number(value)),
                           }));
                         }
                       }
                     }}
-                    onKeyPress={(e) => handleBidKeyPress(e, player)}
+                    onKeyPress={e => handleBidKeyPress(e, player)}
                     className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-center focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all placeholder-slate-600"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={e => e.stopPropagation()}
                   />
                 ) : (
-                  <span className={`${
-                    valueIndicator 
-                      ? valueIndicator.color === 'text-green-600' ? 'text-green-400' :
-                        valueIndicator.color === 'text-yellow-600' ? 'text-yellow-400' :
-                        valueIndicator.color === 'text-orange-600' ? 'text-orange-400' :
-                        'text-red-400'
-                      : 'text-slate-500'
-                  }`}>
+                  <span
+                    className={`${
+                      valueIndicator
+                        ? valueIndicator.color === 'text-green-600'
+                          ? 'text-green-400'
+                          : valueIndicator.color === 'text-yellow-600'
+                            ? 'text-yellow-400'
+                            : valueIndicator.color === 'text-orange-600'
+                              ? 'text-orange-400'
+                              : 'text-red-400'
+                        : 'text-slate-500'
+                    }`}
+                  >
                     ${player.draftedPrice}
                   </span>
                 )}
@@ -268,11 +269,11 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
                   <input
                     type="checkbox"
                     checked={isMyTeamChecked}
-                    onChange={(e) => {
+                    onChange={e => {
                       e.stopPropagation();
                       setMyTeamChecks(prev => ({
                         ...prev,
-                        [player.id]: e.target.checked
+                        [player.id]: e.target.checked,
                       }));
                     }}
                     className="w-4 h-4 bg-slate-800 border-slate-600 rounded text-red-600 focus:ring-2 focus:ring-red-500 cursor-pointer"
@@ -288,7 +289,7 @@ export function PlayerQueue({ players, onDraftPlayer, onPlayerClick }: PlayerQue
               <div className="col-span-1 flex items-center justify-center">
                 {player.status === 'available' ? (
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDraft(player);
                     }}

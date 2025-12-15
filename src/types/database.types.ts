@@ -12,13 +12,7 @@
  * Current schema based on: supabase/migrations/001_initial_schema.sql
  */
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export interface Database {
   public: {
@@ -54,7 +48,7 @@ export interface Database {
             columns: ['id'];
             referencedRelation: 'users';
             referencedColumns: ['id'];
-          }
+          },
         ];
       };
     };

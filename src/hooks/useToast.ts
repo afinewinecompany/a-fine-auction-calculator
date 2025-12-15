@@ -64,12 +64,10 @@ export function useToast() {
     toast,
     success: (title: string, description?: string) =>
       toast({ title, description, variant: 'success' }),
-    error: (title: string, description?: string) =>
-      toast({ title, description, variant: 'error' }),
+    error: (title: string, description?: string) => toast({ title, description, variant: 'error' }),
     warning: (title: string, description?: string) =>
       toast({ title, description, variant: 'warning' }),
-    info: (title: string, description?: string) =>
-      toast({ title, description, variant: 'info' }),
+    info: (title: string, description?: string) => toast({ title, description, variant: 'info' }),
   };
 }
 

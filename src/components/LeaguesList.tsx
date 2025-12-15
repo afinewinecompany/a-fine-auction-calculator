@@ -11,14 +11,14 @@ interface LeaguesListProps {
   profilePicture?: string;
 }
 
-export function LeaguesList({ 
-  username, 
-  leagues, 
-  onCreateNew, 
+export function LeaguesList({
+  username,
+  leagues,
+  onCreateNew,
   onContinueDraft,
   onDeleteLeague,
   onLogout,
-  profilePicture
+  profilePicture,
 }: LeaguesListProps) {
   const getStatusBadge = (status: SavedLeague['status']) => {
     switch (status) {
@@ -50,7 +50,10 @@ export function LeaguesList({
       {/* Animated background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse-slow"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div
+          className="absolute top-40 right-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse-slow"
+          style={{ animationDelay: '1s' }}
+        ></div>
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -58,9 +61,9 @@ export function LeaguesList({
         <div className="flex items-center justify-between mb-8 animate-fadeIn">
           <div className="flex items-center gap-4">
             {profilePicture && (
-              <img 
-                src={profilePicture} 
-                alt={username} 
+              <img
+                src={profilePicture}
+                alt={username}
                 className="w-16 h-16 rounded-full border-2 border-red-500 shadow-lg shadow-red-500/30"
               />
             )}
@@ -124,7 +127,9 @@ export function LeaguesList({
                         <span>{new Date(league.lastModified).toLocaleDateString()}</span>
                       </div>
                       <div className="text-slate-400">
-                        <span className="capitalize">{league.settings.scoringType.replace(/-/g, ' ')}</span>
+                        <span className="capitalize">
+                          {league.settings.scoringType.replace(/-/g, ' ')}
+                        </span>
                       </div>
                     </div>
 
@@ -136,7 +141,9 @@ export function LeaguesList({
 
                     {league.status === 'drafting' && (
                       <div className="mt-2 text-sm text-yellow-400">
-                        Draft in progress - {league.players.filter(p => p.status !== 'available').length} players drafted
+                        Draft in progress -{' '}
+                        {league.players.filter(p => p.status !== 'available').length} players
+                        drafted
                       </div>
                     )}
                   </div>
@@ -158,7 +165,7 @@ export function LeaguesList({
                         </>
                       )}
                     </button>
-                    
+
                     <button
                       onClick={() => {
                         if (confirm(`Are you sure you want to delete "${league.leagueName}"?`)) {

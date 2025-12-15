@@ -27,16 +27,12 @@ const DEFAULT_RETRY_DELAY = 1000; // 1 second
 /**
  * Sleep utility for retry delays
  */
-const sleep = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Fetch wrapper with timeout support
  */
-async function fetchWithTimeout(
-  url: string,
-  options: FetchOptions = {}
-): Promise<Response> {
+async function fetchWithTimeout(url: string, options: FetchOptions = {}): Promise<Response> {
   const { timeout = DEFAULT_TIMEOUT, ...fetchOptions } = options;
 
   const controller = new AbortController();
@@ -61,15 +57,8 @@ async function fetchWithTimeout(
  * @returns Promise resolving to the parsed JSON response
  * @throws ApiError on failure after all retries
  */
-export async function apiFetch<T>(
-  url: string,
-  options: FetchOptions = {}
-): Promise<T> {
-  const {
-    retries = DEFAULT_RETRIES,
-    retryDelay = DEFAULT_RETRY_DELAY,
-    ...fetchOptions
-  } = options;
+export async function apiFetch<T>(url: string, options: FetchOptions = {}): Promise<T> {
+  const { retries = DEFAULT_RETRIES, retryDelay = DEFAULT_RETRY_DELAY, ...fetchOptions } = options;
 
   let lastError: ApiError | null = null;
 
@@ -121,8 +110,7 @@ export async function apiFetch<T>(
  * Convenience methods for common HTTP verbs
  */
 export const api = {
-  get: <T>(url: string, options?: FetchOptions) =>
-    apiFetch<T>(url, { ...options, method: 'GET' }),
+  get: <T>(url: string, options?: FetchOptions) => apiFetch<T>(url, { ...options, method: 'GET' }),
 
   post: <T>(url: string, body: unknown, options?: FetchOptions) =>
     apiFetch<T>(url, {

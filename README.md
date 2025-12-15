@@ -61,6 +61,73 @@ npm test           # Run tests
 npm run build      # Build for production
 ```
 
+## Code Quality
+
+This project uses ESLint and Prettier for code quality and formatting.
+
+### Linting
+
+ESLint 9.x with TypeScript support is configured to enforce code quality standards.
+
+```bash
+npm run lint       # Check for linting errors
+npm run lint:fix   # Auto-fix linting errors
+```
+
+### Formatting
+
+Prettier is configured for consistent code formatting.
+
+```bash
+npm run format        # Format all files
+npm run format:check  # Check formatting without making changes
+```
+
+### Pre-Commit Hooks
+
+Husky and lint-staged are configured to automatically lint and format staged files before each commit.
+
+**Bypass hooks (emergency only):**
+
+```bash
+git commit --no-verify
+```
+
+### Naming Conventions
+
+The ESLint configuration enforces naming conventions from the Architecture document:
+
+| Type             | Format                                       | Example                                 |
+| ---------------- | -------------------------------------------- | --------------------------------------- |
+| React Components | PascalCase                                   | `DraftDashboard.tsx`, `PlayerQueue.tsx` |
+| Functions        | camelCase                                    | `calculateInflation`, `getUserById`     |
+| Variables        | camelCase                                    | `leagueId`, `playerData`                |
+| Constants        | SCREAMING_SNAKE_CASE                         | `MAX_RETRIES`, `API_TIMEOUT`            |
+| Types/Interfaces | PascalCase                                   | `User`, `League`, `PlayerProjection`    |
+| Enums            | PascalCase name, SCREAMING_SNAKE_CASE values | `DraftStatus.IN_PROGRESS`               |
+
+### Code Quality Troubleshooting
+
+**Warnings vs Errors:**
+
+- `npm run lint` may show warnings (e.g., naming conventions, unused vars) - these don't block builds
+- Only errors will prevent code from running - warnings are guidance for best practices
+
+**ESLint shows errors for @ imports:**
+
+- Ensure `tsconfig.json` includes path alias configuration
+- The `@/*` alias maps to `./src/*`
+
+**Prettier and ESLint conflict:**
+
+- The configuration uses `eslint-config-prettier` to disable conflicting rules
+- Run `npm run format` after `npm run lint:fix`
+
+**Pre-commit hook fails:**
+
+- Verify `lint-staged` configuration in `package.json`
+- Use `git commit --no-verify` to bypass in emergencies
+
 ## Supabase Setup
 
 This project uses [Supabase](https://supabase.com) for backend services (database, authentication, Edge Functions).
@@ -112,7 +179,7 @@ npx supabase link --project-ref <your-project-ref>
 npx supabase gen types typescript --project-id <project-ref> > src/types/database.types.ts
 ```
 
-### Troubleshooting
+### Supabase Troubleshooting
 
 - **"Supabase credentials not configured"**: Create `.env.local` with valid credentials
 - **Type errors with database**: Regenerate types using the CLI command above

@@ -27,15 +27,14 @@ export function PlayerDetailModal({ player, onClose }: PlayerDetailModalProps) {
               {player.tier && (
                 <>
                   <span className="text-gray-400">•</span>
-                  <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded">Tier {player.tier}</span>
+                  <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded">
+                    Tier {player.tier}
+                  </span>
                 </>
               )}
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -50,20 +49,29 @@ export function PlayerDetailModal({ player, onClose }: PlayerDetailModalProps) {
                 <div className="text-gray-600 mb-1">Original Value</div>
                 <div className="text-gray-900">${player.projectedValue}</div>
               </div>
-              
+
               <div className="p-4 bg-blue-50 rounded-lg">
                 <div className="text-gray-600 mb-1">Adjusted Value</div>
                 <div className="text-blue-700">${player.adjustedValue}</div>
               </div>
-              
-              <div className={`p-4 rounded-lg ${
-                valueChange > 0 ? 'bg-green-50' : valueChange < 0 ? 'bg-red-50' : 'bg-gray-50'
-              }`}>
+
+              <div
+                className={`p-4 rounded-lg ${
+                  valueChange > 0 ? 'bg-green-50' : valueChange < 0 ? 'bg-red-50' : 'bg-gray-50'
+                }`}
+              >
                 <div className="text-gray-600 mb-1">Change</div>
-                <div className={`flex items-center gap-1 ${
-                  valueChange > 0 ? 'text-green-700' : valueChange < 0 ? 'text-red-700' : 'text-gray-700'
-                }`}>
-                  {valueChange > 0 ? '+' : ''}{valueChange} ({valueChangePercent}%)
+                <div
+                  className={`flex items-center gap-1 ${
+                    valueChange > 0
+                      ? 'text-green-700'
+                      : valueChange < 0
+                        ? 'text-red-700'
+                        : 'text-gray-700'
+                  }`}
+                >
+                  {valueChange > 0 ? '+' : ''}
+                  {valueChange} ({valueChangePercent}%)
                   {valueChange > 0 && <TrendingUp className="w-4 h-4" />}
                 </div>
               </div>
@@ -73,7 +81,9 @@ export function PlayerDetailModal({ player, onClose }: PlayerDetailModalProps) {
               <div className="mt-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div className="flex items-center gap-2 text-yellow-800">
                   <AlertCircle className="w-4 h-4" />
-                  <span>Drafted for ${player.draftedPrice} by {player.draftedBy}</span>
+                  <span>
+                    Drafted for ${player.draftedPrice} by {player.draftedBy}
+                  </span>
                 </div>
               </div>
             )}
@@ -140,16 +150,18 @@ export function PlayerDetailModal({ player, onClose }: PlayerDetailModalProps) {
                   <strong>Position Eligibility:</strong> {player.positions.join(', ')}
                 </div>
               </div>
-              
+
               {player.tier && (
                 <div className="p-3 bg-purple-50 rounded-lg">
                   <div className="text-purple-800">
-                    <strong>Tier {player.tier} Player:</strong> {
-                      player.tier === 1 ? 'Elite tier - prioritize in early rounds' :
-                      player.tier === 2 ? 'High-quality starter - solid value' :
-                      player.tier === 3 ? 'Reliable contributor - good depth piece' :
-                      'Value play or bench depth'
-                    }
+                    <strong>Tier {player.tier} Player:</strong>{' '}
+                    {player.tier === 1
+                      ? 'Elite tier - prioritize in early rounds'
+                      : player.tier === 2
+                        ? 'High-quality starter - solid value'
+                        : player.tier === 3
+                          ? 'Reliable contributor - good depth piece'
+                          : 'Value play or bench depth'}
                   </div>
                 </div>
               )}
@@ -157,8 +169,9 @@ export function PlayerDetailModal({ player, onClose }: PlayerDetailModalProps) {
               {valueChange > 5 && (
                 <div className="p-3 bg-green-50 rounded-lg">
                   <div className="text-green-800">
-                    <strong>Value Alert:</strong> This player's value has increased by ${valueChange} due to inflation. 
-                    Consider adjusting your bidding strategy accordingly.
+                    <strong>Value Alert:</strong> This player&apos;s value has increased by $
+                    {valueChange} due to inflation. Consider adjusting your bidding strategy
+                    accordingly.
                   </div>
                 </div>
               )}
@@ -166,8 +179,8 @@ export function PlayerDetailModal({ player, onClose }: PlayerDetailModalProps) {
               {valueChange < -5 && (
                 <div className="p-3 bg-orange-50 rounded-lg">
                   <div className="text-orange-800">
-                    <strong>Note:</strong> This player's adjusted value has decreased. 
-                    This may indicate deflation or position scarcity issues.
+                    <strong>Note:</strong> This player&apos;s adjusted value has decreased. This may
+                    indicate deflation or position scarcity issues.
                   </div>
                 </div>
               )}

@@ -9,7 +9,11 @@
       "Bash(do for subdir in components hooks stores types utils)",
       "Bash(do touch \"src/features/$feature/$subdir/.gitkeep\")",
       "Bash(done)",
-      "Bash(npx supabase init)"
+      "Bash(npx supabase init)",
+      "Bash(npm run lint)",
+      "Bash(npm run build:*)",
+      "Bash(npx vitest run)",
+      "Bash(npm run lint:fix:*)"
     ]
   }
 }

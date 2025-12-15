@@ -20,7 +20,7 @@ export function DraftRoom({ settings, players: initialPlayers, onComplete }: Dra
   const [inflationRate, setInflationRate] = useState(0);
   const [rosterNeedsRemaining, setRosterNeedsRemaining] = useState(settings.rosterSpots);
   const [selectedPlayerForDetail, setSelectedPlayerForDetail] = useState<Player | null>(null);
-  
+
   const moneySpent = myRoster.reduce((sum, p) => sum + (p.draftedPrice || 0), 0);
   const moneyRemaining = settings.budgetPerTeam - moneySpent;
 
@@ -28,15 +28,15 @@ export function DraftRoom({ settings, players: initialPlayers, onComplete }: Dra
   useEffect(() => {
     const newInflationRate = calculateInflation(settings, allDrafted);
     setInflationRate(newInflationRate);
-    
+
     // Adjust all player values based on new inflation
     setPlayers(prevPlayers =>
       prevPlayers.map(p => ({
         ...p,
-        adjustedValue: Math.round(p.projectedValue * (1 + newInflationRate))
+        adjustedValue: Math.round(p.projectedValue * (1 + newInflationRate)),
       }))
     );
-  }, [allDrafted.length, settings]);
+  }, [allDrafted, settings]);
 
   // Update roster needs
   useEffect(() => {
@@ -56,17 +56,11 @@ export function DraftRoom({ settings, players: initialPlayers, onComplete }: Dra
       ...player,
       status: draftedBy === 'me' ? 'onMyTeam' : 'drafted',
       draftedPrice: price,
-      draftedBy: draftedBy === 'me' ? 'My Team' : 'Opponent'
+      draftedBy: draftedBy === 'me' ? 'My Team' : 'Opponent',
     };
 
     // Update players list
-    setPlayers(prevPlayers =>
-      prevPlayers.map(p =>
-        p.id === player.id
-          ? draftedPlayer
-          : p
-      )
-    );
+    setPlayers(prevPlayers => prevPlayers.map(p => (p.id === player.id ? draftedPlayer : p)));
 
     // Update rosters
     if (draftedBy === 'me') {
@@ -108,7 +102,7 @@ export function DraftRoom({ settings, players: initialPlayers, onComplete }: Dra
               settings={settings}
               rosterNeedsRemaining={rosterNeedsRemaining}
             />
-            
+
             <InflationTracker
               settings={settings}
               allDrafted={allDrafted}
@@ -125,7 +119,7 @@ export function DraftRoom({ settings, players: initialPlayers, onComplete }: Dra
             <div className="p-4 bg-gradient-to-r from-emerald-900/50 to-green-900/50 border border-emerald-500/50 rounded-xl flex items-center justify-between backdrop-blur-sm animate-pulse-slow">
               <div>
                 <div className="text-emerald-300">
-                  ✓ Your roster is complete! You've drafted all {totalRosterSpots} players.
+                  ✓ Your roster is complete! You&apos;ve drafted all {totalRosterSpots} players.
                 </div>
                 <div className="text-emerald-400">
                   Total spent: ${moneySpent} of ${settings.budgetPerTeam}

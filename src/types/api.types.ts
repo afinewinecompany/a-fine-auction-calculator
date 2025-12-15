@@ -61,7 +61,8 @@ export interface RegisterRequest {
   displayName?: string;
 }
 
-export interface RegisterResponse extends LoginResponse {}
+// RegisterResponse is identical to LoginResponse
+export type RegisterResponse = LoginResponse;
 
 // =============================================================================
 // Couch Managers API Types
