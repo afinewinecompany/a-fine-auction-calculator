@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "SlashCommand(/bmad:bmm:workflows:create-product-brief)",
+      "Bash(npm ls:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(for feature in auth inflation couch-manager leagues teams players draft projections data-exchange profile)",
+      "Bash(do for subdir in components hooks stores types utils)",
+      "Bash(do touch \"src/features/$feature/$subdir/.gitkeep\")",
+      "Bash(done)",
+      "Bash(npx supabase init)"
+    ]
+  }
+}

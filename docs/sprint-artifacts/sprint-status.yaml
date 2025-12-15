@@ -1,0 +1,196 @@
+# generated: 2025-12-13
+# project: Auction Projections by A Fine Wine Company
+# project_key: auction-projections
+# tracking_system: file-system
+# story_location: c:\Users\lilra\myprojects\ProjectionCalculator\docs\sprint-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - drafted: Story file created in stories folder
+#   - ready-for-dev: Draft approved and story context created
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - completed: Retrospective has been done
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically drafts next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2025-12-13
+project: Auction Projections by A Fine Wine Company
+project_key: auction-projections
+tracking_system: file-system
+story_location: c:\Users\lilra\myprojects\ProjectionCalculator\docs\sprint-artifacts
+
+development_status:
+  # Epic 1: Project Foundation & Setup (8 stories)
+  epic-1: in-progress
+  1-1-initialize-vite-react-typescript-project: done
+  1-2-configure-shadcn-ui-design-system: done
+  1-3-install-core-dependencies: done
+  1-4-configure-testing-framework: done
+  1-5-establish-feature-based-project-structure: done
+  1-6-initialize-supabase-project: done
+  1-7-configure-vercel-deployment: in-progress
+  1-8-configure-code-quality-tools: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: User Authentication & Profile Management (8 stories)
+  epic-2: backlog
+  2-1-create-users-table-and-auth-schema: backlog
+  2-2-implement-email-password-registration: backlog
+  2-3-implement-email-password-login: backlog
+  2-4-implement-google-oauth-authentication: backlog
+  2-5-implement-logout-functionality: backlog
+  2-6-implement-profile-management: backlog
+  2-7-implement-protected-routes: backlog
+  2-8-create-auth-store-with-zustand: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: League Configuration & Management (7 stories)
+  epic-3: backlog
+  3-1-create-leagues-database-table: backlog
+  3-2-implement-create-league-form: backlog
+  3-3-display-saved-leagues-list: backlog
+  3-4-implement-edit-league-settings: backlog
+  3-5-implement-delete-league: backlog
+  3-6-generate-direct-league-access-links: backlog
+  3-7-implement-resume-draft-functionality: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Projection Data Management (8 stories)
+  epic-4: backlog
+  4-1-create-player-projections-database-table: backlog
+  4-2-implement-google-sheets-oauth-integration: backlog
+  4-3-import-projections-from-google-sheets: backlog
+  4-4-implement-fangraphs-api-integration: backlog
+  4-5-select-and-load-fangraphs-projections: backlog
+  4-6-implement-daily-fangraphs-sync: backlog
+  4-7-display-projection-source-and-timestamp: backlog
+  4-8-export-projections-for-offline-analysis: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: Core Inflation Engine (8 stories)
+  epic-5: backlog
+  5-1-design-inflation-data-model: backlog
+  5-2-implement-basic-inflation-calculation: backlog
+  5-3-implement-position-specific-inflation-tracking: backlog
+  5-4-implement-tier-specific-inflation-tracking: backlog
+  5-5-implement-budget-depletion-modeling: backlog
+  5-6-calculate-dynamic-adjusted-player-values: backlog
+  5-7-create-inflation-store-with-zustand: backlog
+  5-8-integrate-inflation-engine-with-draft-state: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Live Draft Experience - Player Discovery & Tracking (11 stories)
+  epic-6: backlog
+  6-1-create-draft-state-database-tables: backlog
+  6-2-implement-playerqueue-component-foundation: backlog
+  6-3-implement-instant-player-search: backlog
+  6-4-implement-sortable-table-columns: backlog
+  6-5-display-adjusted-values-with-prominent-styling: backlog
+  6-6-implement-color-coded-value-indicators: backlog
+  6-7-display-player-draft-status: backlog
+  6-8-implement-filter-by-draft-status: backlog
+  6-9-display-player-tier-assignments: backlog
+  6-10-implement-mobile-responsive-design: backlog
+  6-11-implement-player-detail-modal: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Live Draft Experience - Budget & Roster Management (8 stories)
+  epic-7: backlog
+  7-1-create-rosterpanel-component-foundation: backlog
+  7-2-display-real-time-budget-tracking: backlog
+  7-3-display-money-spent-breakdown-by-position: backlog
+  7-4-display-spending-pace-indicator: backlog
+  7-5-display-roster-composition-by-position: backlog
+  7-6-display-filled-vs-remaining-roster-slots: backlog
+  7-7-display-position-needs-summary: backlog
+  7-8-track-overall-draft-progress: backlog
+  epic-7-retrospective: optional
+
+  # Epic 8: Live Draft Experience - Variance & Inflation Insights (7 stories)
+  epic-8: backlog
+  8-1-create-inflationtracker-component: backlog
+  8-2-display-current-inflation-rate-percentage: backlog
+  8-3-display-variance-tracking-for-drafted-players: backlog
+  8-4-display-inflation-trend-indicators: backlog
+  8-5-display-tier-specific-inflation-breakdown: backlog
+  8-6-display-position-specific-inflation-breakdown: backlog
+  8-7-implement-progressive-disclosure-for-tier-details: backlog
+  epic-8-retrospective: optional
+
+  # Epic 9: Couch Managers Integration & Sync (7 stories)
+  epic-9: backlog
+  9-1-create-draft-sync-edge-function: backlog
+  9-2-implement-connection-to-couch-managers-draft-room: backlog
+  9-3-implement-automatic-api-polling: backlog
+  9-4-display-connection-status-indicators: backlog
+  9-5-display-last-successful-sync-timestamp: backlog
+  9-6-implement-manual-reconnection-trigger: backlog
+  9-7-implement-catch-up-sync-after-connection-restore: backlog
+  epic-9-retrospective: optional
+
+  # Epic 10: Resilience & Manual Sync Fallback (8 stories)
+  epic-10: backlog
+  10-1-detect-api-connection-failures: backlog
+  10-2-enable-manual-sync-mode: backlog
+  10-3-implement-manual-bid-entry: backlog
+  10-4-implement-my-team-checkbox: backlog
+  10-5-maintain-inflation-calculation-accuracy-in-manual-mode: backlog
+  10-6-display-clear-error-messages: backlog
+  10-7-preserve-draft-state-during-connection-failures: backlog
+  10-8-implement-graceful-degradation-pattern: backlog
+  epic-10-retrospective: optional
+
+  # Epic 11: User Onboarding & Discovery (6 stories)
+  epic-11: backlog
+  11-1-create-landing-page-component: backlog
+  11-2-implement-hero-section: backlog
+  11-3-implement-feature-showcase-grid: backlog
+  11-4-implement-how-it-works-section: backlog
+  11-5-implement-call-to-action-buttons: backlog
+  11-6-create-basic-onboarding-flow: backlog
+  epic-11-retrospective: optional
+
+  # Epic 12: Post-Draft Analytics & Value Summary (5 stories)
+  epic-12: backlog
+  12-1-create-post-draft-summary-component: backlog
+  12-2-display-complete-roster-organized-by-position: backlog
+  12-3-display-total-spending-and-budget-utilization: backlog
+  12-4-highlight-steals-with-visual-comparison: backlog
+  12-5-show-competitive-advantage-summary: backlog
+  epic-12-retrospective: optional
+
+  # Epic 13: Admin Operations & Monitoring (11 stories)
+  epic-13: backlog
+  13-1-create-admin-dashboard-route: backlog
+  13-2-display-active-drafts-list: backlog
+  13-3-monitor-api-health-for-integrations: backlog
+  13-4-view-error-rates-with-automated-alerts: backlog
+  13-5-view-connection-success-metrics: backlog
+  13-6-view-projection-sync-logs: backlog
+  13-7-broadcast-in-app-notifications: backlog
+  13-8-track-draft-completion-rates: backlog
+  13-9-view-detailed-incident-logs: backlog
+  13-10-drill-down-into-error-logs: backlog
+  13-11-view-inflation-calculation-performance-metrics: backlog
+  epic-13-retrospective: optional

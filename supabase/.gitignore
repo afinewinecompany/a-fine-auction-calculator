@@ -1,0 +1,7 @@
+# Supabase local development secrets
+.branches
+.temp
+.env
+
+# Local database data
+.db
