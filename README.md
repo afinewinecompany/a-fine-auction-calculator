@@ -2,6 +2,56 @@
 
 Fantasy baseball auction draft companion that provides real-time inflation-adjusted player values during live auction drafts.
 
+## Deployment
+
+**Production URL:** <https://a-fine-auction-calculator.vercel.app>
+
+### Deploying to Production
+
+Deployment is automatic via Vercel:
+
+1. Push changes to `master` branch
+2. Vercel automatically builds and deploys
+3. Deployment typically completes in 1-3 minutes
+
+### Preview Deployments
+
+- Every push to non-master branches creates a preview deployment
+- Preview URL is commented on pull requests automatically
+- Preview deployments use the same environment variables as production
+
+### Environment Variables
+
+Required environment variables (set in Vercel dashboard):
+
+- `VITE_SUPABASE_URL` - Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
+
+### Viewing Deployment Logs
+
+1. Visit [Vercel Dashboard](https://vercel.com/dashboard)
+2. Select project: `a-fine-auction-calculator`
+3. Click on deployment to view logs
+
+### Troubleshooting Deployments
+
+**Build Fails:**
+
+- Check build logs in Vercel dashboard
+- Verify `npm run build` works locally
+- Ensure all dependencies are in `package.json`
+
+**App Shows Errors:**
+
+- Check browser console for errors
+- Verify environment variables are set correctly
+- Verify Supabase project is accessible
+
+**Routes Return 404:**
+
+- Verify `vercel.json` exists with SPA rewrite configuration
+- Check that file was committed to repository
+
 ## Quick Start
 
 ```bash
