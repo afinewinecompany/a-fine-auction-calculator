@@ -42,15 +42,15 @@ story_location: c:\Users\lilra\myprojects\ProjectionCalculator\docs\sprint-artif
 
 development_status:
   # Epic 1: Project Foundation & Setup (8 stories)
-  epic-1: in-progress
+  epic-1: done
   1-1-initialize-vite-react-typescript-project: done
   1-2-configure-shadcn-ui-design-system: done
   1-3-install-core-dependencies: done
   1-4-configure-testing-framework: done
   1-5-establish-feature-based-project-structure: done
   1-6-initialize-supabase-project: done
-  1-7-configure-vercel-deployment: review
-  1-8-configure-code-quality-tools: review
+  1-7-configure-vercel-deployment: done
+  1-8-configure-code-quality-tools: done
   epic-1-retrospective: optional
 
   # Epic 2: User Authentication & Profile Management (8 stories)
