@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createMockSupabaseClient, mockProfile, createMockUser, createMockSession } from '../helpers/supabaseMock';
+import {
+  createMockSupabaseClient,
+  mockUser,
+  mockAdminUser,
+  createMockUser,
+  createMockSession,
+} from '../helpers/supabaseMock';
 
 describe('Supabase Mock', () => {
   let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
@@ -15,7 +21,7 @@ describe('Supabase Mock', () => {
     });
 
     it('should provide chainable query methods', () => {
-      const query = mockSupabase.from('profiles');
+      const query = mockSupabase.from('users');
       expect(query.select).toBeDefined();
       expect(query.eq).toBeDefined();
       expect(query.order).toBeDefined();
@@ -23,7 +29,7 @@ describe('Supabase Mock', () => {
 
     it('should allow method chaining', () => {
       const chain = mockSupabase
-        .from('profiles')
+        .from('users')
         .select('*')
         .eq('id', 'test-id')
         .order('created_at')
@@ -75,25 +81,40 @@ describe('Supabase Mock', () => {
   });
 
   describe('Mock helpers', () => {
-    it('should export mockProfile with correct structure', () => {
-      expect(mockProfile).toHaveProperty('id');
-      expect(mockProfile).toHaveProperty('username');
-      expect(mockProfile).toHaveProperty('avatar_url');
-      expect(mockProfile).toHaveProperty('is_admin');
-      expect(mockProfile).toHaveProperty('created_at');
-      expect(mockProfile).toHaveProperty('updated_at');
+    it('should export mockUser with correct users table structure', () => {
+      // Verify mockUser matches the users table schema from migration 002
+      expect(mockUser).toHaveProperty('id');
+      expect(mockUser).toHaveProperty('email');
+      expect(mockUser).toHaveProperty('display_name');
+      expect(mockUser).toHaveProperty('avatar_url');
+      expect(mockUser).toHaveProperty('is_admin');
+      expect(mockUser).toHaveProperty('created_at');
+      expect(mockUser).toHaveProperty('updated_at');
+
+      // Verify types
+      expect(typeof mockUser.id).toBe('string');
+      expect(typeof mockUser.email).toBe('string');
+      expect(typeof mockUser.is_admin).toBe('boolean');
     });
 
-    it('should create mock user with defaults', () => {
+    it('should export mockAdminUser with is_admin true', () => {
+      expect(mockAdminUser.is_admin).toBe(true);
+      expect(mockAdminUser.email).toBe('admin@example.com');
+    });
+
+    it('should create mock auth user with defaults', () => {
       const user = createMockUser();
-      expect(user.id).toBe('test-user-id-123');
+      expect(user.id).toBe('550e8400-e29b-41d4-a716-446655440000'); // Valid UUID
       expect(user.email).toBe('test@example.com');
       expect(user.aud).toBe('authenticated');
     });
 
-    it('should create mock user with overrides', () => {
-      const user = createMockUser({ id: 'custom-id', email: 'custom@example.com' });
-      expect(user.id).toBe('custom-id');
+    it('should create mock auth user with overrides', () => {
+      const user = createMockUser({
+        id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+        email: 'custom@example.com',
+      });
+      expect(user.id).toBe('a1b2c3d4-e5f6-7890-abcd-ef1234567890');
       expect(user.email).toBe('custom@example.com');
     });
 
@@ -102,7 +123,7 @@ describe('Supabase Mock', () => {
       expect(session.access_token).toBe('mock-access-token');
       expect(session.refresh_token).toBe('mock-refresh-token');
       expect(session.user).toBeDefined();
-      expect(session.user.id).toBe('test-user-id-123');
+      expect(session.user.id).toBe('550e8400-e29b-41d4-a716-446655440000'); // Valid UUID
     });
   });
 
@@ -168,7 +189,7 @@ describe('Supabase Health Check', () => {
       expect(supabase.from).toBeDefined();
 
       // Optional: Uncomment to test actual connection (requires real credentials)
-      // const { error } = await supabase.from('profiles').select('count').limit(0);
+      // const { error } = await supabase.from('users').select('count').limit(0);
       // expect(error).toBeNull();
     } else {
       // Graceful handling when not configured

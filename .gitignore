@@ -34,3 +34,6 @@ supabase/.branches
 supabase/.temp
 supabase/.env
 supabase/.db
+
+# Claude Code
+.mcp.json

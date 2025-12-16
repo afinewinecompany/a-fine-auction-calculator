@@ -4,16 +4,25 @@
  * Main router setup using react-router-dom v7.
  * Configures all application routes with proper wrappers.
  *
- * Note: This is a placeholder configuration. The actual router integration
- * will be implemented in future stories (Epic 2+) when authentication
- * and feature components are ready.
+ * Story: 2.2 - Implement Email/Password Registration (added /register route)
+ * Story: 2.3 - Implement Email/Password Login (added /login route)
  */
 
+import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Toaster } from 'sonner';
 
 import { routes } from './index';
 import { AuthRoutes } from './AuthRoutes';
 import { ProtectedRoutes, AdminRoutes } from './ProtectedRoutes';
+import { useAuthStore } from '@/features/auth/stores/authStore';
+
+// Auth components
+import { RegistrationPage } from '@/features/auth/components/RegistrationPage';
+import { LoginPage } from '@/features/auth/components/LoginPage';
+
+// Layout components
+import { AppLayout } from '@/components/AppLayout';
 
 /**
  * Loading fallback component
@@ -90,11 +99,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: routes.public.login,
-        element: <PlaceholderRoute name="Login" />,
+        element: <LoginPage />,
       },
       {
         path: routes.public.register,
-        element: <PlaceholderRoute name="Register" />,
+        element: <RegistrationPage />,
       },
     ],
   },
@@ -104,24 +113,30 @@ const router = createBrowserRouter([
     element: <ProtectedRoutes />,
     children: [
       {
-        path: routes.protected.dashboard,
-        element: <PlaceholderRoute name="Dashboard" />,
-      },
-      {
-        path: routes.protected.leagues,
-        element: <PlaceholderRoute name="Leagues" />,
-      },
-      {
-        path: routes.protected.setup,
-        element: <PlaceholderRoute name="League Setup" />,
-      },
-      {
-        path: routes.protected.draft,
-        element: <PlaceholderRoute name="Draft Room" />,
-      },
-      {
-        path: routes.protected.analysis,
-        element: <PlaceholderRoute name="Post-Draft Analysis" />,
+        // Wrap protected routes with AppLayout for consistent header/navigation
+        element: <AppLayout />,
+        children: [
+          {
+            path: routes.protected.dashboard,
+            element: <PlaceholderRoute name="Dashboard" />,
+          },
+          {
+            path: routes.protected.leagues,
+            element: <PlaceholderRoute name="Leagues" />,
+          },
+          {
+            path: routes.protected.setup,
+            element: <PlaceholderRoute name="League Setup" />,
+          },
+          {
+            path: routes.protected.draft,
+            element: <PlaceholderRoute name="Draft Room" />,
+          },
+          {
+            path: routes.protected.analysis,
+            element: <PlaceholderRoute name="Post-Draft Analysis" />,
+          },
+        ],
       },
     ],
   },
@@ -131,8 +146,14 @@ const router = createBrowserRouter([
     element: <AdminRoutes />,
     children: [
       {
-        path: routes.admin.dashboard,
-        element: <PlaceholderRoute name="Admin Dashboard" />,
+        // Wrap admin routes with AppLayout for consistent header/navigation
+        element: <AppLayout />,
+        children: [
+          {
+            path: routes.admin.dashboard,
+            element: <PlaceholderRoute name="Admin Dashboard" />,
+          },
+        ],
       },
     ],
   },
@@ -161,9 +182,33 @@ const router = createBrowserRouter([
  * App Router Component
  *
  * Provides the router to the application.
+ * Initializes auth state on mount.
  */
 export function AppRouter() {
-  return <RouterProvider router={router} />;
+  const initialize = useAuthStore(state => state.initialize);
+  const isInitialized = useAuthStore(state => state.isInitialized);
+
+  // Initialize auth state on app mount
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  // Show loading until auth is initialized
+  if (!isInitialized) {
+    return <LoadingFallback />;
+  }
+
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: 'bg-slate-900 text-white border-slate-800',
+        }}
+      />
+    </>
+  );
 }
 
 // Export utilities for use elsewhere

@@ -3,20 +3,13 @@
  *
  * Wraps routes that require authentication.
  * Redirects to login if user is not authenticated.
+ *
+ * Story: 2.2 - Integrated with real Zustand auth store
  */
 
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { routes } from './index';
-
-// Placeholder for auth state - will be replaced with Zustand store in Epic 2
-const useAuth = () => {
-  // TODO: Replace with actual auth store
-  return {
-    isAuthenticated: false,
-    isLoading: false,
-    user: null,
-  };
-};
+import { useIsAuthenticated, useAuthLoading } from '@/features/auth/stores/authStore';
 
 /**
  * Protected Routes Component
@@ -25,7 +18,8 @@ const useAuth = () => {
  * If user is not authenticated, redirect to login page.
  */
 export function ProtectedRoutes() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useIsAuthenticated();
+  const isLoading = useAuthLoading();
   const location = useLocation();
 
   // Show loading state while checking auth
@@ -56,8 +50,10 @@ export function ProtectedRoutes() {
  * Use this to wrap routes that require admin role.
  */
 export function AdminRoutes() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useIsAuthenticated();
+  const isLoading = useAuthLoading();
   const location = useLocation();
+  // TODO: Add useUser() for admin role check when implementing admin features
 
   if (isLoading) {
     return (

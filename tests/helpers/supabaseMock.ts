@@ -2,35 +2,76 @@ import { vi } from 'vitest';
 import type { Database } from '../../src/types/database.types';
 
 // Type aliases for convenience
-type Profile = Database['public']['Tables']['profiles']['Row'];
+type User = Database['public']['Tables']['users']['Row'];
 
 /**
- * Mock profile data for testing
+ * Mock user data for testing
+ * Represents a row in the users table (migration 002_users_auth.sql)
+ * Uses valid UUIDs and past dates for test fidelity
  */
-export const mockProfile: Profile = {
-  id: 'test-user-id-123',
-  username: 'testuser',
+export const mockUser: User = {
+  id: '550e8400-e29b-41d4-a716-446655440000', // Valid UUID v4 format
+  email: 'test@example.com',
+  display_name: 'Test User',
   avatar_url: 'https://example.com/avatar.jpg',
   is_admin: false,
-  created_at: '2025-01-01T00:00:00.000Z',
-  updated_at: '2025-01-01T00:00:00.000Z',
+  created_at: '2024-06-15T10:30:00.000Z', // Past date for realistic testing
+  updated_at: '2024-06-15T10:30:00.000Z',
+};
+
+/**
+ * Mock admin user for testing admin functionality
+ * Uses valid UUIDs and past dates for test fidelity
+ */
+export const mockAdminUser: User = {
+  id: '6ba7b810-9dad-11d1-80b4-00c04fd430c8', // Valid UUID v1 format
+  email: 'admin@example.com',
+  display_name: 'Admin User',
+  avatar_url: null,
+  is_admin: true,
+  created_at: '2024-06-01T08:00:00.000Z', // Past date for realistic testing
+  updated_at: '2024-06-10T14:22:00.000Z', // Updated later than created
 };
 
 /**
  * Creates a chainable query builder mock
- * Supports method chaining like: from('profiles').select('*').eq('id', '123').single()
+ * Supports method chaining like: from('users').select('*').eq('id', '123').single()
  */
 const createQueryBuilder = () => {
   const builder: Record<string, ReturnType<typeof vi.fn>> = {};
 
   // All methods return the builder for chaining
   const chainableMethods = [
-    'select', 'insert', 'update', 'delete', 'upsert',
-    'eq', 'neq', 'gt', 'lt', 'gte', 'lte',
-    'like', 'ilike', 'is', 'in', 'contains', 'containedBy',
-    'range', 'textSearch', 'match', 'not', 'or', 'filter',
-    'order', 'limit', 'offset',
-    'single', 'maybeSingle', 'csv', 'returns',
+    'select',
+    'insert',
+    'update',
+    'delete',
+    'upsert',
+    'eq',
+    'neq',
+    'gt',
+    'lt',
+    'gte',
+    'lte',
+    'like',
+    'ilike',
+    'is',
+    'in',
+    'contains',
+    'containedBy',
+    'range',
+    'textSearch',
+    'match',
+    'not',
+    'or',
+    'filter',
+    'order',
+    'limit',
+    'offset',
+    'single',
+    'maybeSingle',
+    'csv',
+    'returns',
   ];
 
   chainableMethods.forEach(method => {
@@ -48,7 +89,7 @@ const createQueryBuilder = () => {
  *
  * Usage in tests:
  * ```typescript
- * import { createMockSupabaseClient, mockProfile } from '@/tests/helpers/supabaseMock';
+ * import { createMockSupabaseClient, mockUser } from '@/tests/helpers/supabaseMock';
  *
  * const mockSupabase = createMockSupabaseClient();
  *
@@ -57,7 +98,7 @@ const createQueryBuilder = () => {
  *   ...createQueryBuilder(),
  *   select: vi.fn().mockReturnValue({
  *     eq: vi.fn().mockReturnValue({
- *       single: vi.fn().mockResolvedValue({ data: mockProfile, error: null })
+ *       single: vi.fn().mockResolvedValue({ data: mockUser, error: null })
  *     })
  *   })
  * });
@@ -72,7 +113,7 @@ export const createMockSupabaseClient = () => ({
     // Default resolved value
     Object.defineProperty(builder, 'then', {
       value: (resolve: (value: { data: unknown; error: null }) => void) => {
-        resolve({ data: table === 'profiles' ? [mockProfile] : [], error: null });
+        resolve({ data: table === 'users' ? [mockUser] : [], error: null });
       },
     });
     return builder;
@@ -149,15 +190,30 @@ export const createMockSupabaseError = (message: string, code?: string) => ({
 });
 
 /**
- * Helper to create a mock authenticated user
+ * Helper to create a mock authenticated user (auth.users format, not public.users)
+ * Uses valid UUIDs and past dates for test fidelity
  */
 export const createMockUser = (overrides?: Partial<{ id: string; email: string }>) => ({
-  id: overrides?.id || 'test-user-id-123',
+  id: overrides?.id || '550e8400-e29b-41d4-a716-446655440000', // Valid UUID
   email: overrides?.email || 'test@example.com',
   app_metadata: {},
   user_metadata: {},
   aud: 'authenticated',
-  created_at: '2025-01-01T00:00:00.000Z',
+  created_at: '2024-06-15T10:30:00.000Z', // Past date for realistic testing
+});
+
+/**
+ * Helper to create a mock user profile (public.users format)
+ * This is the user profile stored in our database, not Supabase Auth
+ */
+export const createMockUserProfile = (overrides?: Partial<User>) => ({
+  id: overrides?.id || '550e8400-e29b-41d4-a716-446655440000',
+  email: overrides?.email || 'test@example.com',
+  display_name: overrides?.display_name ?? 'Test User',
+  avatar_url: overrides?.avatar_url ?? 'https://example.com/avatar.jpg',
+  is_admin: overrides?.is_admin ?? false,
+  created_at: overrides?.created_at || '2024-06-15T10:30:00.000Z',
+  updated_at: overrides?.updated_at || '2024-06-15T10:30:00.000Z',
 });
 
 /**
