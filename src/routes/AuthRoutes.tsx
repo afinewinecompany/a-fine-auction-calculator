@@ -36,8 +36,12 @@ export function AuthRoutes() {
 
   // If authenticated, redirect to leagues dashboard (or intended destination)
   if (isAuthenticated) {
-    const from = (location.state as { from?: string })?.from || routes.protected.leagues;
-    return <Navigate to={from} replace />;
+    const from = (location.state as { from?: string })?.from;
+    // Validate return URL to prevent open redirect attacks
+    // Only allow relative paths starting with / (not //)
+    const safePath =
+      from && from.startsWith('/') && !from.startsWith('//') ? from : routes.protected.leagues;
+    return <Navigate to={safePath} replace />;
   }
 
   // Render child routes (login, register)

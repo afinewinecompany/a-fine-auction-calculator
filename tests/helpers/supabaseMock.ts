@@ -14,6 +14,7 @@ export const mockUser: User = {
   email: 'test@example.com',
   display_name: 'Test User',
   avatar_url: 'https://example.com/avatar.jpg',
+  onboarding_completed: true,
   is_admin: false,
   created_at: '2024-06-15T10:30:00.000Z', // Past date for realistic testing
   updated_at: '2024-06-15T10:30:00.000Z',
@@ -28,6 +29,7 @@ export const mockAdminUser: User = {
   email: 'admin@example.com',
   display_name: 'Admin User',
   avatar_url: null,
+  onboarding_completed: true,
   is_admin: true,
   created_at: '2024-06-01T08:00:00.000Z', // Past date for realistic testing
   updated_at: '2024-06-10T14:22:00.000Z', // Updated later than created

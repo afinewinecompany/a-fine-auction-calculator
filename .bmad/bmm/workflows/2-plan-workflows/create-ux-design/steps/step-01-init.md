@@ -3,6 +3,7 @@
 ## MANDATORY EXECUTION RULES (READ FIRST):
 
 - 🛑 NEVER generate content without user input
+- 🎨 FIGMA REQUIRED: You MUST verify Figma designs exist before generating frontend code
 
 - 📖 CRITICAL: ALWAYS read the complete step file before taking any action - partial understanding leads to incomplete decisions
 - 🔄 CRITICAL: When loading next step with 'C', ensure the entire file is read and understood before proceeding
@@ -84,11 +85,33 @@ Discover and load context documents using smart discovery:
 - Epics: `{output_folder}/analysis/*epic*.md` or `{output_folder}/*epic*.md` or `{output_folder}/*epic*/**/*.md`
 - Brainstorming: `{output_folder}/analysis/brainstorming/*brainstorming*.md` or `{output_folder}/*brainstorming*.md`
 
+**Figma Design Files:**
+
+- Check for existing Figma analysis: `{output_folder}/figma-design-*.md`
+- If found, load to understand existing design decisions
+
 **Loading Rules:**
 
 - Load ALL discovered files completely (no offset/limit)
 - For sharded folders, load ALL files to get complete picture
 - Track all successfully loaded files in frontmatter `inputDocuments` array
+
+#### A.5 Figma Design Verification (CRITICAL)
+
+**MANDATORY**: Before proceeding to code generation steps, verify Figma designs:
+
+1. **Check for Figma MCP tools**: Verify `get_figma_data` and `download_figma_images` are available
+2. **Ask user for Figma file**: "Do you have a Figma file for this project? Please provide the Figma URL or file key."
+3. **If Figma exists**:
+   - Use `get_figma_data` to fetch the design
+   - Extract: component hierarchy, color tokens, typography, spacing, interaction states
+   - Save analysis to `{output_folder}/figma-design-analysis.md`
+   - Save design tokens to `{output_folder}/figma-design-tokens.md`
+4. **If NO Figma exists**:
+   - Inform user: "Figma design is REQUIRED before frontend implementation"
+   - Offer to help define design requirements for handoff to designer
+   - Mark `figmaStatus: 'missing'` in frontmatter
+   - Can continue with UX specification, but BLOCK code generation until Figma is provided
 
 #### B. Create Initial Document
 
@@ -104,6 +127,9 @@ lastStep: 0
 project_name: '{{project_name}}'
 user_name: '{{user_name}}'
 date: '{{date}}'
+figmaStatus: 'pending'  # pending | verified | missing
+figmaFileKey: ''        # Figma file key if provided
+figmaUrl: ''            # Full Figma URL if provided
 ---
 ```
 
@@ -128,9 +154,20 @@ Report what was found:
 
 **Files loaded:** {list of specific file names or "No additional documents found"}
 
+**Figma Design Status:**
+
+- Status: {figmaStatus - pending/verified/missing}
+- Figma URL: {figmaUrl or "Not provided"}
+
+⚠️ **IMPORTANT**: Before we can generate any frontend code, you MUST provide a Figma design file.
+Do you have a Figma file for this project? Please provide the Figma URL or file key.
+
+If no Figma design exists yet, I can help you define design requirements to hand off to a designer.
+
 Do you have any other documents you'd like me to include, or shall we continue to the next step?
 
-[C] Continue to UX discovery"
+[F] Provide Figma file URL/key
+[C] Continue to UX discovery (Note: code generation will be blocked without Figma)"
 
 ## SUCCESS METRICS:
 
@@ -139,6 +176,8 @@ Do you have any other documents you'd like me to include, or shall we continue t
 ✅ Input documents discovered and loaded using sharded-first logic
 ✅ All discovered files tracked in frontmatter `inputDocuments`
 ✅ User confirmed document setup and can proceed
+✅ Figma status checked and user prompted for Figma file
+✅ If Figma provided: design data fetched and analyzed using MCP tools
 
 ## FAILURE MODES:
 
@@ -147,6 +186,9 @@ Do you have any other documents you'd like me to include, or shall we continue t
 ❌ Creating document without proper template
 ❌ Not checking sharded folders first before whole files
 ❌ Not reporting what documents were found to user
+❌ **FIGMA CRITICAL**: Generating frontend code without verifying Figma designs exist
+❌ **FIGMA CRITICAL**: Not prompting user for Figma file URL/key
+❌ **FIGMA CRITICAL**: Not using get_figma_data MCP tool when Figma URL is provided
 
 ❌ **CRITICAL**: Reading only partial step file - leads to incomplete understanding and poor decisions
 ❌ **CRITICAL**: Proceeding with 'C' without fully reading and understanding the next step file
@@ -154,6 +196,18 @@ Do you have any other documents you'd like me to include, or shall we continue t
 
 ## NEXT STEP:
 
+**[F] Figma File Provided:**
+When user provides Figma URL/key:
+
+1. Use `get_figma_data` MCP tool to fetch the design
+2. Parse and extract: component hierarchy, color tokens, typography, spacing, interaction states
+3. Save to `{output_folder}/figma-design-analysis.md` and `{output_folder}/figma-design-tokens.md`
+4. Update frontmatter: `figmaStatus: 'verified'`, `figmaUrl`, `figmaFileKey`
+5. Report what was extracted and show [C] option
+
+**[C] Continue:**
 After user selects [C] to continue, load `./step-02-discovery.md` to begin the UX discovery phase.
 
 Remember: Do NOT proceed to step-02 until user explicitly selects [C] to continue!
+
+⚠️ **FIGMA ENFORCEMENT**: If `figmaStatus` is still 'pending' or 'missing' when reaching code generation steps later in the workflow, you MUST stop and request Figma designs before generating any frontend component code.

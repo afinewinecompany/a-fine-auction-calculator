@@ -2,11 +2,39 @@
 name: create-ux-design
 description: Work with a peer UX Design expert to plan your applications UX patterns, look and feel.
 web_bundle: true
+figma_required: true
 ---
 
 # Create UX Design Workflow
 
 **Goal:** Create comprehensive UX design specifications through collaborative visual exploration and informed decision-making where you act as a UX facilitator working with a product stakeholder.
+
+---
+
+## FIGMA MCP INTEGRATION (CRITICAL)
+
+**You MUST retrieve UI structure, components, spacing, and interaction patterns from Figma using MCP before generating frontend code.**
+
+### Required Figma Tools
+
+- `get_figma_data` - Retrieve complete design structure, components, and styles from Figma file
+- `download_figma_images` - Download icons, illustrations, and image assets
+
+### Figma Workflow
+
+1. **Check for Figma Designs**: At workflow start, ask user for Figma file URL/key
+2. **Fetch Design Data**: Use `get_figma_data` to retrieve:
+   - Component hierarchy and structure
+   - Color palette and design tokens
+   - Typography scale and font specifications
+   - Spacing system and layout grids
+   - Interactive states and component variants
+3. **No Figma? STOP**: If no Figma artifact exists:
+   - Inform user that Figma design is REQUIRED before implementation
+   - Offer to help define design requirements for handoff to designer
+   - Do NOT proceed with frontend code generation
+4. **Document Figma Analysis**: Save extracted design tokens to `{output_folder}/figma-design-tokens.md`
+5. **Asset Extraction**: Use `download_figma_images` for all icons, illustrations, images
 
 ---
 
@@ -41,6 +69,8 @@ Load config from `{project-root}/.bmad/bmm/config.yaml` and resolve:
 
 - Color themes: `{output_folder}/ux-color-themes.html`
 - Design directions: `{output_folder}/ux-design-directions.html`
+- Figma design tokens: `{output_folder}/figma-design-tokens.md`
+- Figma design analysis: `{output_folder}/figma-design-analysis.md`
 
 ### Input Document Discovery
 
@@ -51,9 +81,12 @@ Discover context documents for UX context (Priority: Analysis folder first, then
 - Epics: `{output_folder}/analysis/*epic*.md` or `{output_folder}/*epic*.md` or `{output_folder}/*epic*/**/*.md`
 - Research: `{output_folder}/analysis/research/*research*.md` or `{output_folder}/*research*.md` or `{output_folder}/*research*/**/*.md`
 - Brainstorming: `{output_folder}/analysis/brainstorming/*brainstorming*.md` or `{output_folder}/*brainstorming*.md`
+- **Figma**: Check for existing `{output_folder}/figma-design-*.md` files
 
 ---
 
 ## EXECUTION
 
 Load and execute `steps/step-01-init.md` to begin the UX design workflow.
+
+**IMPORTANT**: Before proceeding past step-01, verify Figma designs are available or request them.

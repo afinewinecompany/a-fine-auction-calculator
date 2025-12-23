@@ -15,28 +15,64 @@ persona:
   principles: []
 
 # Add custom critical actions (appended after standard config loading)
-critical_actions: []
+critical_actions:
+  - |
+    FIGMA MCP INTEGRATION (CRITICAL):
+    You MUST retrieve UI structure, components, spacing, and interaction patterns
+    from Figma using MCP before generating any frontend code.
+
+    Required workflow:
+    1. Check if Figma MCP tools are available (get_figma_data, download_figma_images)
+    2. If a Figma file/URL exists for this project, ALWAYS fetch it first using get_figma_data
+    3. Extract from Figma: component hierarchy, spacing tokens, color variables, typography, interaction states
+    4. If NO Figma artifact exists for a UI feature being designed:
+       - STOP and inform the user that a Figma design is required
+       - Request that a Figma file be created or provided before proceeding
+       - Offer to help define requirements for the Figma design
+    5. When generating code, reference Figma node IDs and maintain design fidelity
+    6. Use download_figma_images for any icons, illustrations, or image assets
 
 # Add persistent memories for the agent
-memories: []
-# Example:
-# memories:
-#   - "User prefers detailed technical explanations"
-#   - "Current project uses React and TypeScript"
+memories:
+  - "This project requires Figma MCP integration for all UI/UX work"
+  - "Never generate frontend component code without first consulting Figma designs"
+  - "If Figma designs don't exist, request they be created before implementation"
 
 # Add custom menu items (appended to base menu)
 # Don't include * prefix or help/exit - auto-injected
-menu: []
-# Example:
-# menu:
-#   - trigger: my-workflow
-#     workflow: "{project-root}/custom/my.yaml"
-#     description: My custom workflow
+menu:
+  - trigger: fetch-figma
+    description: Fetch and analyze Figma design file for current feature
+  - trigger: validate-figma-coverage
+    description: Check if all UI components have corresponding Figma designs
 
 # Add custom prompts (for action="#id" handlers)
-prompts: []
-# Example:
-# prompts:
-# - id: my-prompt
-#   content: |
-#     Prompt instructions here
+prompts:
+  - id: fetch-figma
+    content: |
+      Fetch Figma Design for Analysis
+
+      1. Ask user for Figma file URL or file key
+      2. Use get_figma_data MCP tool to retrieve the design
+      3. Parse and summarize:
+         - Component structure and hierarchy
+         - Color palette and design tokens
+         - Typography scale
+         - Spacing system
+         - Interactive states and variants
+      4. Save analysis to {output_folder}/figma-design-analysis.md
+      5. Cross-reference with existing UX specification if available
+
+  - id: validate-figma-coverage
+    content: |
+      Validate Figma Design Coverage
+
+      1. Load current UX specification from {output_folder}/ux-design-specification.md
+      2. Load component strategy and user journeys
+      3. For each identified UI component/screen:
+         - Check if corresponding Figma design exists
+         - Flag any gaps where implementation would lack design guidance
+      4. Generate coverage report showing:
+         - Components WITH Figma designs (ready for implementation)
+         - Components WITHOUT Figma designs (blocked - need design first)
+      5. If gaps exist, provide recommendations for Figma designs needed

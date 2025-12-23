@@ -27,6 +27,7 @@ describe('Users Table Schema', () => {
         'email',
         'display_name',
         'avatar_url',
+        'onboarding_completed',
         'is_admin',
         'created_at',
         'updated_at',
@@ -38,6 +39,7 @@ describe('Users Table Schema', () => {
         email: 'test@example.com',
         display_name: 'Test User',
         avatar_url: 'https://example.com/avatar.jpg',
+        onboarding_completed: false,
         is_admin: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -79,6 +81,7 @@ describe('Users Table Schema', () => {
         email: 'test@example.com',
         display_name: null, // nullable
         avatar_url: null, // nullable
+        onboarding_completed: null, // nullable
         is_admin: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -86,6 +89,7 @@ describe('Users Table Schema', () => {
 
       expect(rowWithNulls.display_name).toBeNull();
       expect(rowWithNulls.avatar_url).toBeNull();
+      expect(rowWithNulls.onboarding_completed).toBeNull();
     });
   });
 

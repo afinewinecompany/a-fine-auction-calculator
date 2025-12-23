@@ -6,6 +6,13 @@
  *
  * Story: 2.2 - Implement Email/Password Registration (added /register route)
  * Story: 2.3 - Implement Email/Password Login (added /login route)
+ * Story: 2.6 - Implement Profile Management (added /profile route)
+ * Story: 3.2 - Implement Create League Form (added /leagues/new route)
+ * Story: 4.5 - Select and Load Fangraphs Projections (added /leagues/:leagueId/projections/import route)
+ * Story: 11.1 - Create Landing Page Component (replaced placeholder with LandingPage)
+ * Story: 11.5 - Implement Call-to-Action Buttons (added /signup alias and /demo route)
+ * Story: 12.1 - Create Post-Draft Summary Component (added /leagues/:leagueId/draft/summary route)
+ * Story: 13.1 - Create Admin Dashboard Route (replaced placeholder with AdminDashboard)
  */
 
 import { useEffect } from 'react';
@@ -20,6 +27,21 @@ import { useAuthStore } from '@/features/auth/stores/authStore';
 // Auth components
 import { RegistrationPage } from '@/features/auth/components/RegistrationPage';
 import { LoginPage } from '@/features/auth/components/LoginPage';
+
+// Profile components
+import { ProfileView, ProfileErrorBoundary } from '@/features/profile';
+
+// League components
+import { LeagueForm, LeaguesList, LeagueDetail } from '@/features/leagues';
+import { GoogleOAuthCallback, ProjectionImportPage } from '@/features/projections';
+import { DraftPage, DraftSummaryPage } from '@/features/draft';
+
+// Landing page component
+import { LandingPage } from '@/features/landing';
+
+// Admin components
+import { AdminDashboard } from '@/features/admin/components/AdminDashboard';
+import { ErrorLogsPage } from '@/features/admin/components/ErrorLogsPage';
 
 // Layout components
 import { AppLayout } from '@/components/AppLayout';
@@ -89,11 +111,16 @@ const router = createBrowserRouter([
   // Public routes
   {
     path: routes.public.home,
-    element: <PlaceholderRoute name="Landing Page" />,
+    element: <LandingPage />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: routes.public.demo,
+    element: <PlaceholderRoute name="Product Demo" />,
     errorElement: <ErrorFallback />,
   },
 
-  // Auth routes (login, register) - redirect to dashboard if already logged in
+  // Auth routes (login, register, signup) - redirect to dashboard if already logged in
   {
     element: <AuthRoutes />,
     children: [
@@ -105,7 +132,18 @@ const router = createBrowserRouter([
         path: routes.public.register,
         element: <RegistrationPage />,
       },
+      {
+        path: routes.public.signup,
+        element: <RegistrationPage />,
+      },
     ],
+  },
+
+  // OAuth callback routes (public, handles redirect from Google)
+  {
+    path: routes.public.googleCallback,
+    element: <GoogleOAuthCallback />,
+    errorElement: <ErrorFallback />,
   },
 
   // Protected routes - require authentication
@@ -122,7 +160,23 @@ const router = createBrowserRouter([
           },
           {
             path: routes.protected.leagues,
-            element: <PlaceholderRoute name="Leagues" />,
+            element: <LeaguesList />,
+          },
+          {
+            path: routes.protected.leagueNew,
+            element: <LeagueForm onCancel={() => window.history.back()} />,
+          },
+          {
+            path: routes.protected.league,
+            element: <LeagueDetail />,
+          },
+          {
+            path: routes.protected.leagueEdit,
+            element: <LeagueForm mode="edit" onCancel={() => window.history.back()} />,
+          },
+          {
+            path: routes.protected.leagueProjections,
+            element: <ProjectionImportPage />,
           },
           {
             path: routes.protected.setup,
@@ -130,11 +184,23 @@ const router = createBrowserRouter([
           },
           {
             path: routes.protected.draft,
-            element: <PlaceholderRoute name="Draft Room" />,
+            element: <DraftPage />,
+          },
+          {
+            path: routes.protected.draftSummary,
+            element: <DraftSummaryPage />,
           },
           {
             path: routes.protected.analysis,
             element: <PlaceholderRoute name="Post-Draft Analysis" />,
+          },
+          {
+            path: routes.protected.profile,
+            element: (
+              <ProfileErrorBoundary>
+                <ProfileView />
+              </ProfileErrorBoundary>
+            ),
           },
         ],
       },
@@ -142,18 +208,18 @@ const router = createBrowserRouter([
   },
 
   // Admin routes - require admin role
+  // Story: 13.1 - Create Admin Dashboard Route
+  // Story: 13.10 - Drill Down into Error Logs
   {
     element: <AdminRoutes />,
     children: [
       {
-        // Wrap admin routes with AppLayout for consistent header/navigation
-        element: <AppLayout />,
-        children: [
-          {
-            path: routes.admin.dashboard,
-            element: <PlaceholderRoute name="Admin Dashboard" />,
-          },
-        ],
+        path: routes.admin.dashboard,
+        element: <AdminDashboard />,
+      },
+      {
+        path: routes.admin.errorLogs,
+        element: <ErrorLogsPage />,
       },
     ],
   },

@@ -53,8 +53,14 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 -- ============================================================================
--- STEP 4: Create RLS Policies
+-- STEP 4: Create RLS Policies (idempotent - drop if exists first)
 -- ============================================================================
+
+-- Drop existing policies if they exist (for idempotent migrations)
+DROP POLICY IF EXISTS "Users can view own profile" ON users;
+DROP POLICY IF EXISTS "Users can update own profile" ON users;
+DROP POLICY IF EXISTS "Users can insert own profile" ON users;
+DROP POLICY IF EXISTS "Users can delete own profile" ON users;
 
 -- Policy: Users can view their own profile data only
 CREATE POLICY "Users can view own profile"
@@ -94,7 +100,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Create trigger for automatic updated_at timestamp
+-- Create trigger for automatic updated_at timestamp (drop first for idempotency)
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
 CREATE TRIGGER update_users_updated_at
   BEFORE UPDATE ON users
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -129,7 +136,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- STEP 6: Create Trigger for Auto-Creation
 -- ============================================================================
 
--- Trigger to automatically create users record when new auth user signs up
+-- Trigger to automatically create users record when new auth user signs up (drop first for idempotency)
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
