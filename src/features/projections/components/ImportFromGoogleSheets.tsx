@@ -13,7 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { SheetSelector } from './SheetSelector';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { useGoogleSheetsAuth } from '../hooks/useGoogleSheetsAuth';
 import { GoogleSheetsConnect } from './GoogleSheetsConnect';
 import {
@@ -74,7 +74,7 @@ export function ImportFromGoogleSheets({
       // Progress: 10% - Starting import request
       setProgress(30);
 
-      const { data, error } = await supabase.functions.invoke('import-google-sheet', {
+      const { data, error } = await getSupabase().functions.invoke('import-google-sheet', {
         body: {
           sheetId: selectedSheet.id,
           leagueId,

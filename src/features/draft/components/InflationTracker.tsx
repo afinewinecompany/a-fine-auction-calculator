@@ -29,11 +29,11 @@ import { VarianceDisplay } from './VarianceDisplay';
 import { TierBreakdown } from './TierBreakdown';
 import {
   calculateInflationTrend,
-  getTrendIcon,
   getTrendColor,
   getTrendLabel,
   formatTrendTooltip,
 } from '@/features/inflation/utils/trendCalculations';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import type { DraftedPlayer } from '../types/draft.types';
 
 /**
@@ -146,7 +146,6 @@ export function InflationTracker({
     return calculateInflationTrend(inflationHistory, currentPick);
   }, [inflationHistory, currentPick]);
 
-  const TrendIcon = getTrendIcon(trend.direction);
   const trendColor = getTrendColor(trend.direction);
   const trendLabel = getTrendLabel(trend.direction);
   const trendTooltip = formatTrendTooltip(trend);
@@ -167,12 +166,12 @@ export function InflationTracker({
               <div className="text-xs text-slate-400 mb-1">Market Temperature</div>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    role="button"
-                    tabIndex={0}
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
+                    aria-label={`Market temperature: ${isPositive ? 'positive' : isNegative ? 'negative' : 'neutral'} ${Math.abs(inflationRate).toFixed(1)} percent`}
                   >
-                    <div
+                    <span
                       className={`text-3xl font-bold ${
                         isPositive
                           ? 'text-emerald-500'
@@ -180,17 +179,16 @@ export function InflationTracker({
                             ? 'text-red-500'
                             : 'text-slate-400'
                       }`}
-                      aria-label={`Market temperature: ${isPositive ? 'positive' : isNegative ? 'negative' : 'neutral'} ${Math.abs(inflationRate).toFixed(1)} percent`}
                     >
                       {formatInflationRate(inflationRate)}
-                    </div>
+                    </span>
                     <Badge
                       variant={isPositive ? 'default' : isNegative ? 'destructive' : 'secondary'}
                       className="text-xs"
                     >
                       {getBadgeText(inflationRate)}
                     </Badge>
-                  </div>
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent className="bg-slate-800 border-slate-700">
                   <p className="text-sm text-white">{getTooltipMessage(inflationRate)}</p>
@@ -218,14 +216,22 @@ export function InflationTracker({
               <div className="text-xs text-slate-400 mb-1">Trend</div>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    role="button"
-                    tabIndex={0}
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
+                    aria-label={`Inflation trend: ${trendLabel}`}
                   >
-                    <TrendIcon className={`h-5 w-5 ${trendColor}`} aria-hidden="true" />
-                    <div className={`text-lg font-semibold ${trendColor}`}>{trendLabel}</div>
-                  </div>
+                    {trend.direction === 'heating' && (
+                      <TrendingUp className={`h-5 w-5 ${trendColor}`} aria-hidden="true" />
+                    )}
+                    {trend.direction === 'cooling' && (
+                      <TrendingDown className={`h-5 w-5 ${trendColor}`} aria-hidden="true" />
+                    )}
+                    {trend.direction === 'stable' && (
+                      <Minus className={`h-5 w-5 ${trendColor}`} aria-hidden="true" />
+                    )}
+                    <span className={`text-lg font-semibold ${trendColor}`}>{trendLabel}</span>
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent className="bg-slate-800 border-slate-700">
                   <p className="text-sm text-white">{trendTooltip}</p>
@@ -271,12 +277,10 @@ export function InflationTracker({
                   <div
                     key={position}
                     className="flex items-center justify-between px-2 py-1.5 bg-slate-800 rounded"
+                    data-testid={`position-rate-${position}`}
                   >
                     <span className="text-sm font-medium text-slate-300">{position}:</span>
-                    <span
-                      className={cn('text-sm font-semibold', getPositionRateColor(rate))}
-                      aria-label={`${position} inflation rate: ${formatInflationRate(rate)}`}
-                    >
+                    <span className={cn('text-sm font-semibold', getPositionRateColor(rate))}>
                       {formatInflationRate(rate)}
                     </span>
                   </div>

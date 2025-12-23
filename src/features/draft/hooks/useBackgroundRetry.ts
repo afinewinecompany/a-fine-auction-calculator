@@ -99,12 +99,16 @@ export function useBackgroundRetry(options: BackgroundRetryOptions): UseBackgrou
   const {
     retryFn,
     enabled,
-    isManualMode = false,
+    // isManualMode is accepted for API compatibility but retries continue regardless
+    isManualMode: _isManualMode = false,
     initialDelay = 5000,
     maxDelay = 30000,
     onSuccess,
     onRetryFailed,
   } = options;
+
+  // Suppress unused variable warning
+  void _isManualMode;
 
   // State
   const [retryCount, setRetryCount] = useState(0);

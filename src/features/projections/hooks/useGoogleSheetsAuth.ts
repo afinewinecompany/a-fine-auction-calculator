@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 interface UseGoogleSheetsAuthReturn {
   isConnected: boolean;
@@ -27,7 +27,7 @@ export function useGoogleSheetsAuth(): UseGoogleSheetsAuthReturn {
     setError(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('google-oauth', {
+      const { data, error } = await getSupabase().functions.invoke('google-oauth', {
         body: { action: 'check-connection' },
       });
 
@@ -47,7 +47,7 @@ export function useGoogleSheetsAuth(): UseGoogleSheetsAuthReturn {
     setError(null);
 
     try {
-      const { error } = await supabase.functions.invoke('google-oauth', {
+      const { error } = await getSupabase().functions.invoke('google-oauth', {
         body: { action: 'disconnect' },
       });
 

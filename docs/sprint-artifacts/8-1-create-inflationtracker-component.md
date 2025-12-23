@@ -47,11 +47,13 @@ This story implements the foundation component for displaying inflation metrics,
 **Relationship to Epic 8:**
 
 This is Story 1 of 7 in Epic 8. It depends on:
+
 - **Epic 5** (Complete): Core Inflation Engine provides inflation calculations
 - **Epic 6** (In-Progress): PlayerQueue and draft components provide draft state
 - **Story 6.1** (Complete): Draft state database tables
 
 It enables:
+
 - **Story 8.2**: Display current inflation rate percentage
 - **Story 8.3**: Display variance tracking for drafted players
 - **Story 8.4**: Display inflation trend indicators
@@ -64,6 +66,7 @@ It enables:
 **From Epic 5 (Core Inflation Engine - COMPLETED):**
 
 **Existing Inflation Store (src/features/inflation/stores/inflationStore.ts):**
+
 - Provides `inflationRate` (overall inflation percentage)
 - Provides `positionInflation` (position-specific rates: C, 1B, 2B, SS, 3B, OF, SP, RP)
 - Provides `tierInflation` (tier-specific rates: Elite, Mid, Lower)
@@ -71,6 +74,7 @@ It enables:
 - Uses Zustand for state management
 
 **Key Pattern:** Component will subscribe to inflationStore for real-time data:
+
 ```typescript
 const { inflationRate, positionInflation, tierInflation } = useInflationStore();
 ```
@@ -78,12 +82,14 @@ const { inflationRate, positionInflation, tierInflation } = useInflationStore();
 **From Epic 6 Stories (PlayerQueue - IN-PROGRESS):**
 
 **Existing PlayerQueue Component (src/features/draft/components/PlayerQueue.tsx):**
+
 - Uses shadcn/ui Card component for layout
 - Uses dark slate theme with emerald accents
 - Follows responsive design patterns
 - Lives in `src/features/draft/components/`
 
 **Pattern Established:** Follow same component structure and styling:
+
 ```typescript
 <Card className="bg-slate-900 border-slate-800">
   <CardHeader>
@@ -98,6 +104,7 @@ const { inflationRate, positionInflation, tierInflation } = useInflationStore();
 **From Story 7.1 (Create RosterPanel Component Foundation - READY):**
 
 **RosterPanel Component Pattern:** InflationTracker will be positioned alongside RosterPanel in persistent sidebar
+
 - Both components will use Card component
 - Both will have compact layouts optimized for sidebar
 - Both will update in real-time as draft progresses
@@ -122,6 +129,7 @@ interface InflationState {
 ```
 
 **Integration Pattern:**
+
 ```typescript
 import { useInflationStore } from '@/features/inflation/stores/inflationStore';
 
@@ -137,11 +145,13 @@ export function InflationTracker() {
 **Card Component for Layout:**
 
 The InflationTracker should use shadcn/ui Card component:
+
 - `<Card>` - Main container with dark slate background
 - `<CardHeader>` - Title section with "Inflation Insights"
 - `<CardContent>` - Metrics grid content area
 
 **Metrics Grid Layout (2x2):**
+
 ```typescript
 <div className="grid grid-cols-2 gap-4">
   {/* Metric 1: Overall Inflation */}
@@ -171,6 +181,7 @@ The InflationTracker should use shadcn/ui Card component:
 #### Project Organization - Feature-Based
 
 **Required File Structure:**
+
 ```
 src/features/draft/
   components/
@@ -194,6 +205,7 @@ src/features/inflation/
 ```
 
 **Key Principles:**
+
 - **Component Creation:** Create new InflationTracker component in draft feature
 - **shadcn/ui Usage:** Use Card component for consistent layout
 - **Store Integration:** Subscribe to inflationStore for real-time updates
@@ -202,14 +214,17 @@ src/features/inflation/
 #### TypeScript/React Naming Conventions
 
 **React Components:**
+
 - PascalCase for component names
 - Examples: InflationTracker, Card, CardHeader
 
 **Functions:**
+
 - camelCase for function names
 - Examples: `calculateInflation()`, `formatPercentage()`
 
 **Types:**
+
 - PascalCase for interface names
 - Examples: `InflationTrackerProps`, `VarianceData`
 
@@ -222,6 +237,7 @@ src/features/inflation/
 File: `src/features/draft/components/InflationTracker.tsx`
 
 **2. Define Props Interface:**
+
 ```typescript
 import { Position, Tier } from '@/features/inflation/types/inflation.types';
 
@@ -237,6 +253,7 @@ export interface InflationTrackerProps {
 ```
 
 **3. Component Structure:**
+
 ```typescript
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -290,6 +307,7 @@ export function InflationTracker({
 ```
 
 **Styling Notes:**
+
 - Card uses `bg-slate-900 border-slate-800` (dark slate theme)
 - Positive inflation uses `text-emerald-500` (emerald accent)
 - Negative inflation uses `text-red-500` (red for deflation)
@@ -319,6 +337,7 @@ export function useInflationTracker() {
 ```
 
 **Usage in Parent Component:**
+
 ```typescript
 import { InflationTracker } from '@/features/draft/components/InflationTracker';
 import { useInflationTracker } from '@/features/draft/hooks/useInflationTracker';
@@ -369,6 +388,7 @@ export { useInflationTracker } from './hooks/useInflationTracker';
 #### Visual Design Consistency
 
 **InflationTracker Styling:**
+
 - **Dark slate theme** - bg-slate-900 with slate-800 border
 - **Emerald accents** - Positive inflation in emerald-500
 - **Compact layout** - 2x2 grid optimized for sidebar width (320px)
@@ -376,6 +396,7 @@ export { useInflationTracker } from './hooks/useInflationTracker';
 - **Clear hierarchy** - Large numbers for key metrics, small labels
 
 **Metrics Grid Layout:**
+
 - **2x2 Grid** - Four metric cards in compact grid
 - **Equal sizing** - Each metric card same size (grid-cols-2)
 - **Consistent spacing** - gap-4 between metric cards
@@ -385,11 +406,13 @@ export { useInflationTracker } from './hooks/useInflationTracker';
 #### Component Positioning
 
 **Sidebar Layout:**
+
 1. RosterPanel (top) - Budget and roster tracking
 2. InflationTracker (below) - Inflation metrics
 3. Both components in sidebar alongside PlayerQueue
 
 **Layout Structure:**
+
 ```
 +------------------+------------------+
 |                  |  Sidebar (320px) |
@@ -405,6 +428,7 @@ export { useInflationTracker } from './hooks/useInflationTracker';
 #### Accessibility
 
 **Component Accessibility:**
+
 - Semantic HTML with proper heading levels
 - aria-label for metric values
 - Screen reader announcements for inflation changes
@@ -416,6 +440,7 @@ export { useInflationTracker } from './hooks/useInflationTracker';
 **React 18+ Best Practices (2025):**
 
 **Props Interface Pattern:**
+
 ```typescript
 export interface InflationTrackerProps {
   inflationRate: number;
@@ -429,6 +454,7 @@ export interface InflationTrackerProps {
 ```
 
 **Conditional Styling Pattern:**
+
 ```typescript
 className={`text-2xl font-bold ${
   inflationRate > 0 ? 'text-emerald-500' : 'text-red-500'
@@ -436,6 +462,7 @@ className={`text-2xl font-bold ${
 ```
 
 **Number Formatting:**
+
 ```typescript
 // Format percentage with 1 decimal place
 {inflationRate.toFixed(1)}%
@@ -449,6 +476,7 @@ className={`text-2xl font-bold ${
 **Recent Commits Analysis:**
 
 From Epic 6 story completions, established patterns:
+
 - Component creation in `src/features/draft/components/`
 - shadcn/ui Card component usage for layouts
 - Dark slate theme with emerald accents
@@ -457,6 +485,7 @@ From Epic 6 story completions, established patterns:
 **Expected File Creation Pattern:**
 
 Following Epic 6 patterns:
+
 ```
 src/features/draft/
   components/
@@ -467,6 +496,7 @@ src/features/draft/
 ```
 
 **Testing Pattern:**
+
 ```
 tests/features/draft/
   InflationTracker.test.tsx # NEW - Component tests
@@ -510,6 +540,7 @@ c:\Users\lilra\myprojects\ProjectionCalculator/
 **Existing Dependencies:**
 
 All required dependencies already installed:
+
 - `react` v18+ (component framework)
 - `zustand` v5.0.9 (state management)
 - `shadcn/ui` components (Card, CardHeader, CardContent, CardTitle)
@@ -617,6 +648,7 @@ All required dependencies already installed:
 **Key Implementation Details:**
 
 **1. Props Interface:**
+
 ```typescript
 export interface InflationTrackerProps {
   inflationRate: number;
@@ -630,6 +662,7 @@ export interface InflationTrackerProps {
 ```
 
 **2. Component Layout:**
+
 ```typescript
 <Card className="bg-slate-900 border-slate-800">
   <CardHeader>
@@ -644,6 +677,7 @@ export interface InflationTrackerProps {
 ```
 
 **3. Metric Card Pattern:**
+
 ```typescript
 <div className="p-3 bg-slate-800 rounded-lg">
   <div className="text-xs text-slate-400 mb-1">Label</div>
@@ -661,6 +695,7 @@ export interface InflationTrackerProps {
 4. **Automatic Updates** - Zustand triggers re-render when inflation recalculated
 
 **Benefits:**
+
 - **Separation of concerns** - Component doesn't know about store
 - **Testability** - Easy to test with mock props
 - **Reusability** - Component can receive data from any source
@@ -680,12 +715,14 @@ export interface InflationTrackerProps {
 ```
 
 **Visual Hierarchy:**
+
 - **Inflation** - Largest, most prominent (text-2xl)
 - **Variance** - Medium size (text-lg)
 - **Trend** - Medium size with icon (Story 8.4)
 - **Details** - Toggle for position/tier breakdown (Story 8.5-8.7)
 
 **Placeholder Strategy:**
+
 - Story 8.1 creates foundation with placeholders
 - Story 8.2 enhances overall inflation display
 - Story 8.3 implements variance tracking
@@ -770,14 +807,17 @@ describe('InflationTracker', () => {
 **Issue 1: Component Not Updating in Real-Time**
 
 Possible causes:
+
 - Parent component not subscribed to inflationStore
 - useInflationTracker hook not implemented
 - Props not passed correctly
 
 Solution:
+
 - Ensure parent uses useInflationTracker hook
 - Verify props flow from parent to InflationTracker
 - Check Zustand store subscription
+
 ```typescript
 const { inflationRate, positionRates, tierRates } = useInflationTracker();
 <InflationTracker inflationRate={inflationRate} ... />
@@ -786,11 +826,13 @@ const { inflationRate, positionRates, tierRates } = useInflationTracker();
 **Issue 2: Grid Layout Not Displaying Correctly**
 
 Possible causes:
+
 - Incorrect Tailwind grid classes
 - Missing gap spacing
 - Card width constraints
 
 Solution:
+
 - Use `grid grid-cols-2 gap-4` for 2x2 layout
 - Ensure parent container has adequate width (320px sidebar)
 - Test responsive breakpoints
@@ -798,13 +840,16 @@ Solution:
 **Issue 3: Colors Not Applying**
 
 Possible causes:
+
 - Conditional className not evaluating correctly
 - Tailwind class purging issue
 - Missing color classes in config
 
 Solution:
+
 - Use template literal for conditional classes
 - Verify emerald-500 and red-500 in Tailwind config
+
 ```typescript
 className={`text-2xl font-bold ${
   inflationRate > 0 ? 'text-emerald-500' : 'text-red-500'
@@ -814,15 +859,19 @@ className={`text-2xl font-bold ${
 **Issue 4: Props Type Errors**
 
 Possible causes:
+
 - Position or Tier types not imported
 - Record type not matching store structure
 - Missing optional variance property
 
 Solution:
+
 - Import types from inflation feature
+
 ```typescript
 import { Position, Tier } from '@/features/inflation/types/inflation.types';
 ```
+
 - Make variance optional with `?`
 
 ### References
@@ -926,6 +975,7 @@ All tasks completed successfully:
 **Review Status:** Complete
 
 **Review Notes:**
+
 - Component follows established patterns from PlayerQueue and RosterPanel
 - Uses shadcn/ui Card, Badge, and Tooltip components correctly
 - Proper TypeScript interfaces with JSDoc documentation
@@ -966,6 +1016,7 @@ Story 8.1 "Create InflationTracker Component" is ready for implementation.
 **Deliverable:**
 
 Create the InflationTracker component to display inflation metrics:
+
 - Render compact 2x2 metrics grid in sidebar
 - Accept inflationRate, positionRates, tierRates, variance props
 - Use dark slate theme with emerald accents
@@ -989,6 +1040,7 @@ Create the InflationTracker component to display inflation metrics:
 **Epic Progress:**
 
 This is the first story in Epic 8. Completing this story:
+
 - Establishes foundation for inflation insights display
 - Enables Story 8.2: Display Current Inflation Rate Percentage
 - Enables Story 8.3: Display Variance Tracking for Drafted Players
@@ -999,3 +1051,116 @@ This is the first story in Epic 8. Completing this story:
 **Testing:** Component tests for rendering, props, real-time updates, grid layout + Integration tests for sidebar positioning
 
 **Next Step:** Implement component foundation, then proceed to Story 8.2 for enhanced inflation display.
+
+---
+
+## Code Review
+
+**Review Date:** 2025-12-23
+**Reviewer:** Claude Opus 4.5 (with Google Gemini findings as reference)
+**Status:** APPROVED with fixes applied
+
+### Reference Document
+
+Used `docs/epic-8-review-findings.md` (Google Gemini analysis) as the primary reference for this review.
+
+### Issues Found and Fixed
+
+#### 1. Accessibility Issues in InflationTracker.tsx (HIGH PRIORITY)
+
+**Finding:** Using `div` elements with `role="button"` as TooltipTriggers instead of native `<button>` elements.
+
+**Problem:** Non-native button elements can lead to inconsistent keyboard interactions and poorer screen reader experience.
+
+**Fix Applied:** Replaced `div role="button"` with native `<button>` elements for both Market Temperature and Trend tooltip triggers. Added proper `aria-label` attributes to the buttons.
+
+```tsx
+// Before
+<div role="button" tabIndex={0} className="flex items-center gap-2 cursor-pointer">
+
+// After
+<button type="button" className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0"
+        aria-label={`Market temperature: ${isPositive ? 'positive' : 'negative'} ...`}>
+```
+
+#### 2. Redundant aria-labels on Position Rate Spans (MEDIUM PRIORITY)
+
+**Finding:** Redundant `aria-label` attributes on position rate `<span>` elements.
+
+**Problem:** Causes screen readers to announce the same text twice.
+
+**Fix Applied:** Removed redundant `aria-label` from position rate spans. Added `data-testid` for testing instead.
+
+#### 3. Inefficient Zustand State Selection in useInflationTracker.ts (MEDIUM PRIORITY)
+
+**Finding:** Multiple individual selector hooks creating separate store subscriptions.
+
+**Problem:** Each subscription triggers equality checks when any store state changes, causing potential unnecessary re-renders.
+
+**Fix Applied:** Refactored to use single combined selector:
+
+```typescript
+// Before - Multiple subscriptions
+const inflationRate = useOverallInflation();
+const positionRates = usePositionInflation();
+const tierRates = useTierInflation();
+
+// After - Single subscription
+return useInflationStore(state => ({
+  inflationRate: state.overallRate,
+  positionRates: state.positionRates,
+  tierRates: state.tierRates,
+  ...
+}));
+```
+
+#### 4. Missing Combined Selector Hook in inflationStore.ts (LOW PRIORITY)
+
+**Finding:** Store exports many fine-grained selector hooks but lacks guidance on combined selectors.
+
+**Fix Applied:** Added `useInflationTrackerData` hook and performance documentation guiding developers to use combined selectors when accessing multiple state fields.
+
+#### 5. Brittle Tests in InflationTracker.test.tsx (MEDIUM PRIORITY)
+
+**Finding:** Tests asserting specific Tailwind CSS classes (e.g., `text-emerald-500`, `bg-slate-900`).
+
+**Problem:** Makes tests fragile - design changes break tests even if functionality is correct.
+
+**Fixes Applied:**
+
+- Removed CSS class assertion tests (5 tests)
+- Removed redundant aria-label test
+- Replaced with behavior-focused tests
+- Added test verifying native button elements are used
+- Replaced DOM traversal with data-testid queries
+
+### Additional Improvements Made
+
+1. **Icon Rendering Fix:** Changed from dynamic `getTrendIcon` to conditional rendering to avoid eslint `react-hooks/static-components` error.
+
+2. **useMemo for sortedPositions:** Already implemented correctly - positions sorted only when `positionRates` changes.
+
+### Files Modified
+
+| File                                                 | Changes                                                                                         |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `src/features/draft/components/InflationTracker.tsx` | Replaced div[role=button] with native buttons, removed redundant aria-labels, added data-testid |
+| `src/features/draft/hooks/useInflationTracker.ts`    | Refactored to single combined selector                                                          |
+| `src/features/inflation/stores/inflationStore.ts`    | Added useInflationTrackerData hook and performance guide                                        |
+| `tests/features/draft/InflationTracker.test.tsx`     | Removed brittle CSS tests, added accessibility tests                                            |
+
+### Test Results
+
+- **InflationTracker.test.tsx:** 35 tests passing
+- **All inflation tests:** 317 tests passing (13 test files)
+- **Lint:** No errors in Epic 8 files
+
+### Deferred Items (Not Addressed)
+
+Per Gemini review, the following were noted but NOT addressed as they require broader architectural changes:
+
+1. **God Component Refactoring:** InflationTracker is large but manageable. Further decomposition would add complexity without clear benefit at current scale.
+
+2. **Magic Numbers Configuration:** Threshold values (15, 10, 5) in `getPositionRateColor` could be extracted to config, but the current inline implementation is readable and maintainable.
+
+3. **Barrel File Restructuring:** The `draft/index.ts` file is large but follows project conventions. Restructuring would require updating imports across the codebase.

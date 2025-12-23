@@ -128,14 +128,14 @@ development_status:
   epic-7-retrospective: optional
 
   # Epic 8: Live Draft Experience - Variance & Inflation Insights (7 stories)
-  epic-8: in-progress
-  8-1-create-inflationtracker-component: review
-  8-2-display-current-inflation-rate-percentage: review
-  8-3-display-variance-tracking-for-drafted-players: review
-  8-4-display-inflation-trend-indicators: review
-  8-5-display-tier-specific-inflation-breakdown: review
-  8-6-display-position-specific-inflation-breakdown: review
-  8-7-implement-progressive-disclosure-for-tier-details: review
+  epic-8: done
+  8-1-create-inflationtracker-component: done
+  8-2-display-current-inflation-rate-percentage: done
+  8-3-display-variance-tracking-for-drafted-players: done
+  8-4-display-inflation-trend-indicators: done
+  8-5-display-tier-specific-inflation-breakdown: done
+  8-6-display-position-specific-inflation-breakdown: done
+  8-7-implement-progressive-disclosure-for-tier-details: done
   epic-8-retrospective: optional
 
   # Epic 9: Couch Managers Integration & Sync (7 stories)

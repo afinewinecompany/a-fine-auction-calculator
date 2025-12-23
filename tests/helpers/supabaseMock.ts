@@ -213,6 +213,7 @@ export const createMockUserProfile = (overrides?: Partial<User>) => ({
   email: overrides?.email || 'test@example.com',
   display_name: overrides?.display_name ?? 'Test User',
   avatar_url: overrides?.avatar_url ?? 'https://example.com/avatar.jpg',
+  onboarding_completed: overrides?.onboarding_completed ?? true,
   is_admin: overrides?.is_admin ?? false,
   created_at: overrides?.created_at || '2024-06-15T10:30:00.000Z',
   updated_at: overrides?.updated_at || '2024-06-15T10:30:00.000Z',
@@ -226,7 +227,7 @@ export const createMockSession = (user = createMockUser()) => ({
   refresh_token: 'mock-refresh-token',
   expires_in: 3600,
   expires_at: Date.now() / 1000 + 3600,
-  token_type: 'bearer',
+  token_type: 'bearer' as const,
   user,
 });
 

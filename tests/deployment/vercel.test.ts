@@ -1,8 +1,15 @@
-import { readFileSync, existsSync } from 'fs';
-import { resolve } from 'path';
+import fs from 'fs';
+import path from 'path';
+import url from 'url';
+
+// ESM equivalent of __dirname
+const currentFilePath = url.fileURLToPath(import.meta.url);
+const currentDirPath = path.dirname(currentFilePath);
+const { readFileSync, existsSync } = fs;
+const { resolve } = path;
 
 describe('Vercel Deployment Configuration', () => {
-  const projectRoot = resolve(__dirname, '../..');
+  const projectRoot = resolve(currentDirPath, '../..');
   const vercelConfigPath = resolve(projectRoot, 'vercel.json');
 
   test('vercel.json file exists', () => {
@@ -58,7 +65,7 @@ describe('Vercel Deployment Configuration', () => {
 
 describe('Build Output Validation', () => {
   test('build script is defined in package.json', () => {
-    const packageJsonPath = resolve(__dirname, '../..', 'package.json');
+    const packageJsonPath = resolve(currentDirPath, '../..', 'package.json');
     const content = readFileSync(packageJsonPath, 'utf-8');
     const packageJson = JSON.parse(content);
 
@@ -66,7 +73,7 @@ describe('Build Output Validation', () => {
   });
 
   test('preview script is defined for local testing', () => {
-    const packageJsonPath = resolve(__dirname, '../..', 'package.json');
+    const packageJsonPath = resolve(currentDirPath, '../..', 'package.json');
     const content = readFileSync(packageJsonPath, 'utf-8');
     const packageJson = JSON.parse(content);
 
@@ -77,14 +84,14 @@ describe('Build Output Validation', () => {
 
 describe('React Router Configuration', () => {
   test('index.html exists in public or root', () => {
-    const projectRoot = resolve(__dirname, '../..');
+    const projectRoot = resolve(currentDirPath, '../..');
     const indexHtmlPath = resolve(projectRoot, 'index.html');
 
     expect(existsSync(indexHtmlPath)).toBe(true);
   });
 
   test('index.html contains root div for React mounting', () => {
-    const projectRoot = resolve(__dirname, '../..');
+    const projectRoot = resolve(currentDirPath, '../..');
     const indexHtmlPath = resolve(projectRoot, 'index.html');
     const content = readFileSync(indexHtmlPath, 'utf-8');
 

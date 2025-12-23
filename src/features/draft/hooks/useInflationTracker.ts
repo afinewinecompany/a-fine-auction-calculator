@@ -6,14 +6,13 @@
  *
  * Story: 8.1 - Create InflationTracker Component
  * Story: 8.2 - Display Current Inflation Rate Percentage
+ *
+ * Code Review Fix: Uses single combined selector to avoid multiple store subscriptions.
+ * This is more performant than using multiple individual selector hooks.
+ * @see https://docs.pmnd.rs/zustand/guides/prevent-rerenders-with-use-shallow
  */
 
-import {
-  useInflationStore,
-  useOverallInflation,
-  usePositionInflation,
-  useTierInflation,
-} from '@/features/inflation/stores/inflationStore';
+import { useInflationStore } from '@/features/inflation/stores/inflationStore';
 import type { Position, Tier } from '@/features/inflation/types/inflation.types';
 
 /**
@@ -37,6 +36,9 @@ export interface InflationTrackerData {
 /**
  * Hook to get inflation data for the InflationTracker component
  *
+ * Uses a single combined selector for better performance - avoids multiple
+ * store subscriptions that would cause unnecessary re-renders.
+ *
  * @returns Inflation metrics for display
  *
  * @example
@@ -53,21 +55,16 @@ export interface InflationTrackerData {
  * ```
  */
 export function useInflationTracker(): InflationTrackerData {
-  const inflationRate = useOverallInflation();
-  const positionRates = usePositionInflation();
-  const tierRates = useTierInflation();
-  const isCalculating = useInflationStore(state => state.isCalculating);
-  const lastUpdated = useInflationStore(state => state.lastUpdated);
-  const error = useInflationStore(state => state.error);
-
-  return {
-    inflationRate,
-    positionRates,
-    tierRates,
-    isCalculating,
-    lastUpdated,
-    error,
-  };
+  // Single combined selector - more performant than multiple individual selectors
+  // Each individual selector creates a separate subscription to the store
+  return useInflationStore(state => ({
+    inflationRate: state.overallRate,
+    positionRates: state.positionRates,
+    tierRates: state.tierRates,
+    isCalculating: state.isCalculating,
+    lastUpdated: state.lastUpdated,
+    error: state.error,
+  }));
 }
 
 export default useInflationTracker;

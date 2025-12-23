@@ -11,7 +11,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 type CallbackStatus = 'loading' | 'success' | 'error';
 
@@ -44,7 +44,7 @@ export function GoogleOAuthCallback() {
       }
 
       try {
-        const { error: callbackError } = await supabase.functions.invoke('google-oauth', {
+        const { error: callbackError } = await getSupabase().functions.invoke('google-oauth', {
           body: { action: 'callback', code, userId },
         });
 

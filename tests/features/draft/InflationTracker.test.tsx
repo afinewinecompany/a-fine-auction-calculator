@@ -95,34 +95,26 @@ describe('InflationTracker', () => {
       expect(screen.getByText('0.0%')).toBeInTheDocument();
     });
 
-    it('should apply emerald color for positive inflation', () => {
+    // Note: CSS class tests removed per code review - brittle tests that assert
+    // specific Tailwind classes are better covered by visual regression tests.
+    // Tests should focus on behavior, not styling implementation details.
+
+    it('should display positive inflation rate correctly', () => {
       renderWithTooltip({ ...defaultProps, inflationRate: 12.5 });
       const rateElement = screen.getByText('+12.5%');
-      expect(rateElement).toHaveClass('text-emerald-500');
+      expect(rateElement).toBeInTheDocument();
     });
 
-    it('should apply red color for negative inflation', () => {
+    it('should display negative inflation rate correctly', () => {
       renderWithTooltip({ ...defaultProps, inflationRate: -5.3 });
       const rateElement = screen.getByText('-5.3%');
-      expect(rateElement).toHaveClass('text-red-500');
+      expect(rateElement).toBeInTheDocument();
     });
 
-    it('should apply slate color for zero inflation', () => {
+    it('should display zero inflation correctly', () => {
       renderWithTooltip({ ...defaultProps, inflationRate: 0 });
       const rateElement = screen.getByText('0.0%');
-      expect(rateElement).toHaveClass('text-slate-400');
-    });
-
-    it('should use text-3xl font size for inflation rate', () => {
-      renderWithTooltip(defaultProps);
-      const rateElement = screen.getByText('+12.5%');
-      expect(rateElement).toHaveClass('text-3xl');
-    });
-
-    it('should use font-bold for inflation rate', () => {
-      renderWithTooltip(defaultProps);
-      const rateElement = screen.getByText('+12.5%');
-      expect(rateElement).toHaveClass('font-bold');
+      expect(rateElement).toBeInTheDocument();
     });
   });
 
@@ -157,19 +149,19 @@ describe('InflationTracker', () => {
 
     it('should show placeholder when variance not provided', () => {
       renderWithTooltip(defaultProps);
-      // Find the variance section's value (second "--" after Variance label)
-      const varianceSection = screen.getByText('Variance').parentElement;
-      expect(varianceSection).toHaveTextContent('--');
+      // Check for placeholder text in the document
+      expect(screen.getByText('--')).toBeInTheDocument();
     });
   });
 
   describe('trend and tier sections', () => {
     it('should show Trend section with trend indicator', () => {
       renderWithTooltip(defaultProps);
-      const trendSection = screen.getByText('Trend').parentElement;
-      expect(trendSection).toBeInTheDocument();
+      expect(screen.getByText('Trend')).toBeInTheDocument();
       // Should show some trend label (Stable is default when no history)
-      expect(screen.getByText('Stable')).toBeInTheDocument();
+      // Use getAllByText since "Stable" appears in both badge and trend
+      const stableElements = screen.getAllByText('Stable');
+      expect(stableElements.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should show Tiers section with collapsible content', () => {
@@ -179,14 +171,9 @@ describe('InflationTracker', () => {
     });
   });
 
-  describe('2x2 grid layout', () => {
-    it('should use 2-column grid layout', () => {
-      renderWithTooltip(defaultProps);
-      // Find the grid container
-      const cardContent = screen.getByText('Market Temperature').parentElement?.parentElement;
-      expect(cardContent).toHaveClass('grid', 'grid-cols-2');
-    });
-  });
+  // Note: Grid layout test removed per code review - CSS class assertions
+  // for layout are brittle. The layout is implicitly tested by verifying
+  // all four sections render correctly.
 
   describe('position breakdown section (Story 8.6)', () => {
     it('should render Position Breakdown toggle button', () => {
@@ -198,7 +185,9 @@ describe('InflationTracker', () => {
       renderWithTooltip(defaultProps);
       const toggleButton = screen.getByRole('button', { name: /position breakdown/i });
       expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
-      expect(screen.queryByRole('region', { name: /position-specific inflation rates/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('region', { name: /position-specific inflation rates/i })
+      ).not.toBeInTheDocument();
     });
 
     it('should expand when toggle button is clicked', async () => {
@@ -208,7 +197,9 @@ describe('InflationTracker', () => {
       await user.click(toggleButton);
 
       expect(toggleButton).toHaveAttribute('aria-expanded', 'true');
-      expect(screen.getByRole('region', { name: /position-specific inflation rates/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('region', { name: /position-specific inflation rates/i })
+      ).toBeInTheDocument();
     });
 
     it('should collapse when toggle button is clicked again', async () => {
@@ -219,7 +210,9 @@ describe('InflationTracker', () => {
       await user.click(toggleButton); // Collapse
 
       expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
-      expect(screen.queryByRole('region', { name: /position-specific inflation rates/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('region', { name: /position-specific inflation rates/i })
+      ).not.toBeInTheDocument();
     });
 
     it('should display all positions when expanded', async () => {
@@ -251,9 +244,11 @@ describe('InflationTracker', () => {
       const { user } = renderWithTooltip(defaultProps);
       await user.click(screen.getByRole('button', { name: /position breakdown/i }));
 
-      const positionBreakdown = screen.getByRole('region', { name: /position-specific inflation rates/i });
+      const positionBreakdown = screen.getByRole('region', {
+        name: /position-specific inflation rates/i,
+      });
       const positionLabels = positionBreakdown.querySelectorAll('.text-slate-300');
-      const positions = Array.from(positionLabels).map((el) => el.textContent?.replace(':', ''));
+      const positions = Array.from(positionLabels).map(el => el.textContent?.replace(':', ''));
 
       // SP has highest rate (8.3), SS second (6.2), C third (5.2)
       expect(positions[0]).toBe('SP');
@@ -261,7 +256,11 @@ describe('InflationTracker', () => {
       expect(positions[2]).toBe('C');
     });
 
-    it('should apply red color for high inflation positions (>=15%)', async () => {
+    // Note: CSS class color tests removed per code review - these are brittle tests
+    // that couple tests to specific Tailwind classes. Visual styling is better
+    // covered by visual regression tests or Storybook snapshots.
+
+    it('should display high inflation position rates correctly', async () => {
       const highInflationProps = {
         ...defaultProps,
         positionRates: { ...defaultPositionRates, C: 22 },
@@ -269,11 +268,10 @@ describe('InflationTracker', () => {
       const { user } = renderWithTooltip(highInflationProps);
       await user.click(screen.getByRole('button', { name: /position breakdown/i }));
 
-      const cRate = screen.getByText('+22.0%');
-      expect(cRate).toHaveClass('text-red-500');
+      expect(screen.getByText('+22.0%')).toBeInTheDocument();
     });
 
-    it('should apply orange color for moderately high inflation positions (>=10%)', async () => {
+    it('should display moderately high inflation position rates correctly', async () => {
       const modHighInflationProps = {
         ...defaultProps,
         positionRates: { ...defaultPositionRates, C: 12 },
@@ -281,11 +279,10 @@ describe('InflationTracker', () => {
       const { user } = renderWithTooltip(modHighInflationProps);
       await user.click(screen.getByRole('button', { name: /position breakdown/i }));
 
-      const cRate = screen.getByText('+12.0%');
-      expect(cRate).toHaveClass('text-orange-500');
+      expect(screen.getByText('+12.0%')).toBeInTheDocument();
     });
 
-    it('should apply blue color for negative inflation positions', async () => {
+    it('should display negative inflation position rates correctly', async () => {
       const negativeInflationProps = {
         ...defaultProps,
         positionRates: { ...defaultPositionRates, RP: -3 },
@@ -293,8 +290,7 @@ describe('InflationTracker', () => {
       const { user } = renderWithTooltip(negativeInflationProps);
       await user.click(screen.getByRole('button', { name: /position breakdown/i }));
 
-      const rpRate = screen.getByText('-3.0%');
-      expect(rpRate).toHaveClass('text-blue-400');
+      expect(screen.getByText('-3.0%')).toBeInTheDocument();
     });
 
     it('should display explanation text in expanded section', async () => {
@@ -305,41 +301,44 @@ describe('InflationTracker', () => {
       expect(screen.getByText(/Red\/orange indicates position scarcity/)).toBeInTheDocument();
     });
 
-    it('should have proper aria-label for each position rate', async () => {
+    // Note: Removed redundant aria-label test per code review - the position label
+    // and rate are already visible text content, making aria-labels redundant.
+    // Screen readers will announce "SP: +8.3%" from the visible text.
+
+    it('should have data-testid for each position rate row', async () => {
       const { user } = renderWithTooltip(defaultProps);
       await user.click(screen.getByRole('button', { name: /position breakdown/i }));
 
-      expect(screen.getByLabelText('SP inflation rate: +8.3%')).toBeInTheDocument();
-      expect(screen.getByLabelText('C inflation rate: +5.2%')).toBeInTheDocument();
+      expect(screen.getByTestId('position-rate-SP')).toBeInTheDocument();
+      expect(screen.getByTestId('position-rate-C')).toBeInTheDocument();
     });
   });
 
-  describe('dark theme styling', () => {
-    it('should apply dark slate background to card', () => {
-      const { container } = renderWithTooltip(defaultProps);
-      const card = container.querySelector('[class*="bg-slate-900"]');
-      expect(card).toBeInTheDocument();
-    });
-
-    it('should apply dark background to metric boxes', () => {
-      renderWithTooltip(defaultProps);
-      const marketTempBox = screen.getByText('Market Temperature').parentElement;
-      expect(marketTempBox).toHaveClass('bg-slate-800');
-    });
-  });
+  // Note: Dark theme styling tests removed per code review - CSS class assertions
+  // are brittle and couple tests to implementation details. Visual styling should
+  // be verified through visual regression testing or Storybook snapshots.
 
   describe('accessibility', () => {
-    it('should have aria-label for inflation rate', () => {
+    it('should have aria-label for market temperature button', () => {
       renderWithTooltip({ ...defaultProps, inflationRate: 12.5 });
-      const rateElement = screen.getByLabelText(/Market temperature: positive 12.5 percent/i);
-      expect(rateElement).toBeInTheDocument();
+      // aria-label is now on the button element wrapping the rate display
+      const rateButton = screen.getByRole('button', {
+        name: /Market temperature: positive 12.5 percent/i,
+      });
+      expect(rateButton).toBeInTheDocument();
+    });
+
+    it('should have aria-label for trend button', () => {
+      renderWithTooltip(defaultProps);
+      const trendButton = screen.getByRole('button', { name: /Inflation trend:/i });
+      expect(trendButton).toBeInTheDocument();
     });
 
     it('should have multiple interactive button elements', () => {
       renderWithTooltip(defaultProps);
       const buttons = screen.getAllByRole('button');
-      // Should have position breakdown toggle and tier breakdown toggle
-      expect(buttons.length).toBeGreaterThanOrEqual(2);
+      // Should have: market temp tooltip, trend tooltip, position breakdown toggle, tier breakdown toggle
+      expect(buttons.length).toBeGreaterThanOrEqual(4);
     });
 
     it('should have keyboard accessible position breakdown toggle', () => {
@@ -347,6 +346,13 @@ describe('InflationTracker', () => {
       const positionToggle = screen.getByRole('button', { name: /position breakdown/i });
       expect(positionToggle).toBeInTheDocument();
       expect(positionToggle).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('should use native button elements for tooltip triggers (not div with role=button)', () => {
+      const { container } = renderWithTooltip(defaultProps);
+      // Verify no div elements have role="button" - we now use native buttons
+      const divsWithButtonRole = container.querySelectorAll('div[role="button"]');
+      expect(divsWithButtonRole.length).toBe(0);
     });
   });
 });

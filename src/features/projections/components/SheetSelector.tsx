@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 interface Sheet {
   id: string;
@@ -37,7 +37,7 @@ export function SheetSelector({ onSelect, disabled = false }: SheetSelectorProps
   useEffect(() => {
     async function loadSheets() {
       try {
-        const { data, error } = await supabase.functions.invoke('google-oauth', {
+        const { data, error } = await getSupabase().functions.invoke('google-oauth', {
           body: { action: 'list-sheets' },
         });
 

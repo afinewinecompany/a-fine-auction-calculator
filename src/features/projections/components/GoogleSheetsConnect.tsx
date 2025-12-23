@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, FileSpreadsheet, Unlink } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 interface GoogleSheetsConnectProps {
   onConnected?: () => void;
@@ -19,10 +19,12 @@ interface GoogleSheetsConnectProps {
 }
 
 export function GoogleSheetsConnect({
-  onConnected,
+  onConnected: _onConnected,
   onDisconnected,
   isConnected = false,
 }: GoogleSheetsConnectProps) {
+  // onConnected is available for future use when OAuth flow completes inline
+  void _onConnected;
   const [isConnecting, setIsConnecting] = useState(false);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +34,7 @@ export function GoogleSheetsConnect({
     setError(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('google-oauth', {
+      const { data, error } = await getSupabase().functions.invoke('google-oauth', {
         body: { action: 'authorize' },
       });
 
@@ -54,7 +56,7 @@ export function GoogleSheetsConnect({
     setError(null);
 
     try {
-      const { error } = await supabase.functions.invoke('google-oauth', {
+      const { error } = await getSupabase().functions.invoke('google-oauth', {
         body: { action: 'disconnect' },
       });
 

@@ -476,6 +476,39 @@ export const useInflationStore = create<InflationStore>()(
 // ============================================================================
 
 /**
+ * PERFORMANCE GUIDE: Combined vs Individual Selectors
+ *
+ * When your component needs multiple pieces of state, prefer using a combined
+ * selector (like useInflationTrackerData) over multiple individual selectors.
+ *
+ * Each individual selector creates a separate subscription to the store.
+ * Multiple subscriptions = multiple equality checks = potential extra re-renders.
+ *
+ * Example - AVOID if you need multiple fields:
+ *   const rate = useOverallInflation();
+ *   const positions = usePositionInflation();
+ *   const tiers = useTierInflation();
+ *
+ * Example - PREFER when you need multiple fields:
+ *   const { inflationRate, positionRates, tierRates } = useInflationTrackerData();
+ */
+
+/**
+ * Combined selector for InflationTracker component.
+ * Recommended for components that need multiple pieces of inflation state.
+ * Single subscription = better performance than multiple individual selectors.
+ */
+export const useInflationTrackerData = () =>
+  useInflationStore(state => ({
+    inflationRate: state.overallRate,
+    positionRates: state.positionRates,
+    tierRates: state.tierRates,
+    isCalculating: state.isCalculating,
+    lastUpdated: state.lastUpdated,
+    error: state.error,
+  }));
+
+/**
  * Get overall inflation rate
  */
 export const useOverallInflation = () => useInflationStore(state => state.overallRate);

@@ -257,21 +257,17 @@ export function useInflationIntegration(
     }
 
     // Set up Zustand subscription
-    const unsubscribe = useDraftStore.subscribe(
-      state => {
-        const draft = state.drafts[leagueId];
-        return draft?.draftedPlayers.length ?? 0;
-      },
-      (draftedCount, prevCount) => {
-        // Only recalculate if count actually changed
-        if (draftedCount !== prevCount && prevCount !== undefined) {
-          debouncedRecalculate();
-        }
-      },
-      {
-        fireImmediately: false,
+    let prevCount = -1;
+    const unsubscribe = useDraftStore.subscribe(state => {
+      const draft = state.drafts[leagueId];
+      const draftedCount = draft?.draftedPlayers.length ?? 0;
+
+      // Only recalculate if count actually changed
+      if (draftedCount !== prevCount && prevCount !== -1) {
+        debouncedRecalculate();
       }
-    );
+      prevCount = draftedCount;
+    });
 
     return () => {
       unsubscribe();
@@ -337,40 +333,35 @@ export function setupInflationSubscription(
 ): () => void {
   const inflationProjections = projections.map(toInflationProjection);
 
-  const unsubscribe = useDraftStore.subscribe(
-    state => {
-      const draft = state.drafts[leagueId];
-      return {
-        draftedPlayers: draft?.draftedPlayers ?? [],
-        remainingBudget: draft?.remainingBudget ?? budgetConfig.totalBudget,
-        initialBudget: draft?.initialBudget ?? budgetConfig.totalBudget,
-      };
-    },
-    ({ draftedPlayers, remainingBudget, initialBudget }, prevState) => {
-      // Only recalculate if players changed
-      if (prevState && draftedPlayers.length === prevState.draftedPlayers.length) {
-        return;
-      }
+  let prevDraftedCount = -1;
 
-      const inflationDraftedPlayers = draftedPlayers.map(toInflationDraftedPlayer);
-      const spent = initialBudget - remainingBudget;
-      const slotsRemaining = budgetConfig.totalRosterSpots - draftedPlayers.length;
+  const unsubscribe = useDraftStore.subscribe(state => {
+    const draft = state.drafts[leagueId];
+    const draftedPlayers = draft?.draftedPlayers ?? [];
+    const remainingBudget = draft?.remainingBudget ?? budgetConfig.totalBudget;
+    const initialBudget = draft?.initialBudget ?? budgetConfig.totalBudget;
 
-      const budgetContext: BudgetContext = {
-        totalBudget: budgetConfig.totalBudget,
-        spent,
-        totalRosterSpots: budgetConfig.totalRosterSpots,
-        slotsRemaining,
-      };
-
-      useInflationStore
-        .getState()
-        .updateInflation(inflationDraftedPlayers, inflationProjections, budgetContext);
-    },
-    {
-      fireImmediately: true,
+    // Only recalculate if players changed
+    if (prevDraftedCount !== -1 && draftedPlayers.length === prevDraftedCount) {
+      return;
     }
-  );
+    prevDraftedCount = draftedPlayers.length;
+
+    const inflationDraftedPlayers = draftedPlayers.map(toInflationDraftedPlayer);
+    const spent = initialBudget - remainingBudget;
+    const slotsRemaining = budgetConfig.totalRosterSpots - draftedPlayers.length;
+
+    const budgetContext: BudgetContext = {
+      totalBudget: budgetConfig.totalBudget,
+      spent,
+      totalRosterSpots: budgetConfig.totalRosterSpots,
+      slotsRemaining,
+    };
+
+    useInflationStore
+      .getState()
+      .updateInflation(inflationDraftedPlayers, inflationProjections, budgetContext);
+  });
 
   return unsubscribe;
 }
