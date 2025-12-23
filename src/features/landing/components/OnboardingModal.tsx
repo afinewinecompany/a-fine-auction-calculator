@@ -24,7 +24,7 @@ import { TrendingUp, DollarSign, Layers, Sparkles } from 'lucide-react';
 
 interface OnboardingModalProps {
   open: boolean;
-  onComplete: () => void;
+  onComplete?: () => void;
 }
 
 /**
@@ -46,7 +46,7 @@ export function OnboardingModal({ open, onComplete }: OnboardingModalProps) {
     if (step < totalSteps - 1) {
       setStep(step + 1);
     } else {
-      onComplete();
+      onComplete?.();
     }
   };
 
@@ -57,7 +57,7 @@ export function OnboardingModal({ open, onComplete }: OnboardingModalProps) {
   };
 
   const handleSkip = () => {
-    onComplete();
+    onComplete?.();
   };
 
   const progress = ((step + 1) / totalSteps) * 100;

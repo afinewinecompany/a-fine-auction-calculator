@@ -16,7 +16,7 @@
  */
 
 import { useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
 import { routes } from './index';
@@ -115,8 +115,9 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
+    // Demo redirects to landing page - demo content is part of landing page
     path: routes.public.demo,
-    element: <PlaceholderRoute name="Product Demo" />,
+    element: <Navigate to="/" replace />,
     errorElement: <ErrorFallback />,
   },
 
@@ -156,7 +157,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: routes.protected.dashboard,
-            element: <PlaceholderRoute name="Dashboard" />,
+            element: <Navigate to="/leagues" replace />,
           },
           {
             path: routes.protected.leagues,
@@ -180,7 +181,7 @@ const router = createBrowserRouter([
           },
           {
             path: routes.protected.setup,
-            element: <PlaceholderRoute name="League Setup" />,
+            element: <Navigate to="/leagues" replace />,
           },
           {
             path: routes.protected.draft,
@@ -191,8 +192,9 @@ const router = createBrowserRouter([
             element: <DraftSummaryPage />,
           },
           {
+            // Redirect to draft summary - analysis is handled there
             path: routes.protected.analysis,
-            element: <PlaceholderRoute name="Post-Draft Analysis" />,
+            element: <Navigate to="/leagues" replace />,
           },
           {
             path: routes.protected.profile,

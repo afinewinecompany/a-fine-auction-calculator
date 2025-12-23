@@ -58,9 +58,24 @@ const COLORS = {
 };
 
 /**
+ * Custom tooltip props for recharts
+ */
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    payload: {
+      name: string;
+      value: number;
+      percentage: number;
+      fill: string;
+    };
+  }>;
+}
+
+/**
  * Custom tooltip for chart displaying detailed spending info
  */
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (!active || !payload || !payload[0]) {
     return null;
   }

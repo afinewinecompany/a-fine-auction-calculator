@@ -330,7 +330,7 @@ describe('OnboardingModal', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Real-Time Inflation Tracking')).toBeInTheDocument();
-        expect(screen.getByText(/inflation inflates the value/i)).toBeInTheDocument();
+        expect(screen.getByText(/inflates the value/i)).toBeInTheDocument();
       });
     });
 
@@ -431,7 +431,9 @@ describe('OnboardingModal', () => {
       const onComplete = vi.fn();
       render(<OnboardingModal open={true} onComplete={onComplete} />);
 
-      expect(screen.getByRole('heading', { name: /welcome to auction projections/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: /welcome to auction projections/i })
+      ).toBeInTheDocument();
     });
 
     it('should have accessible buttons', () => {

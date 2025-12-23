@@ -68,7 +68,7 @@ describe('HeroSection', () => {
     it('renders View Demo secondary CTA button', () => {
       renderWithRouter(<HeroSection />);
 
-      const viewDemoLink = screen.getByRole('link', { name: /view demo/i });
+      const viewDemoLink = screen.getByRole('link', { name: /view product demo/i });
       expect(viewDemoLink).toBeInTheDocument();
       expect(viewDemoLink).toHaveAttribute('href', '/demo');
     });
@@ -84,8 +84,9 @@ describe('HeroSection', () => {
     it('secondary CTA has outline variant styling', () => {
       renderWithRouter(<HeroSection />);
 
-      const viewDemoButton = screen.getByRole('link', { name: /view demo/i });
-      expect(viewDemoButton.closest('[data-slot="button"]')).toHaveClass('border-emerald-500/50');
+      const viewDemoButton = screen.getByRole('link', { name: /view product demo/i });
+      // The link itself has the border class (asChild passes classes to Link)
+      expect(viewDemoButton).toHaveClass('border-emerald-500/50');
     });
   });
 
@@ -144,9 +145,7 @@ describe('HeroSection', () => {
     it('has radial overlay for depth', () => {
       const { container } = renderWithRouter(<HeroSection />);
 
-      const radialOverlay = container.querySelector(
-        '[class*="bg-[radial-gradient"]'
-      );
+      const radialOverlay = container.querySelector('[class*="bg-[radial-gradient"]');
       expect(radialOverlay).toBeInTheDocument();
     });
 
@@ -178,7 +177,7 @@ describe('HeroSection', () => {
 
       const links = screen.getAllByRole('link');
       expect(links).toHaveLength(2);
-      links.forEach((link) => {
+      links.forEach(link => {
         expect(link).toHaveAttribute('href');
       });
     });
