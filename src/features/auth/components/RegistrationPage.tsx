@@ -7,7 +7,7 @@
  * Story: 2.2 - Implement Email/Password Registration
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { AlertCircle, Loader2, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
@@ -192,21 +192,28 @@ export function RegistrationPage() {
     },
   });
 
-  // Watch password for strength indicator
+  // Watch form values for validation and strength indicator
   const password = watch('password', '');
+  const email = watch('email', '');
 
-  // Memoize clearError to use in dependency array
-  const handleClearError = useCallback(() => {
-    if (error) {
+  // Track previous form values to detect user typing (not error state changes)
+  const prevEmailRef = useRef(email);
+  const prevPasswordRef = useRef(password);
+
+  // Clear error only when user changes form values (typing)
+  useEffect(() => {
+    // Only clear error if the user actually typed something new
+    const emailChanged = prevEmailRef.current !== email;
+    const passwordChanged = prevPasswordRef.current !== password;
+
+    if ((emailChanged || passwordChanged) && error) {
       clearError();
     }
-  }, [error, clearError]);
 
-  // Clear error when form values change
-  const email = watch('email');
-  useEffect(() => {
-    handleClearError();
-  }, [email, password, handleClearError]);
+    // Update refs for next comparison
+    prevEmailRef.current = email;
+    prevPasswordRef.current = password;
+  }, [email, password, error, clearError]);
 
   /**
    * Handle Google OAuth sign-up

@@ -9,7 +9,7 @@
  * Story: 2.4 - Implement Google OAuth Authentication
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
@@ -169,12 +169,9 @@ export function LoginPage() {
   // Get returnTo URL from query params (for deep linking)
   const returnTo = searchParams.get('returnTo');
 
-  // Memoize clearError to use in dependency array
-  const handleClearError = useCallback(() => {
-    if (error) {
-      clearError();
-    }
-  }, [error, clearError]);
+  // Track previous form values to detect user typing (not error state changes)
+  const prevEmailRef = useRef('');
+  const prevPasswordRef = useRef('');
 
   // Handle OAuth callback on page load
   // This effect runs once on mount to detect and process OAuth callbacks
@@ -252,10 +249,20 @@ export function LoginPage() {
   const email = watch('email');
   const password = watch('password');
 
-  // Clear error when form values change
+  // Clear error only when user changes form values (typing)
   useEffect(() => {
-    handleClearError();
-  }, [email, password, handleClearError]);
+    // Only clear error if the user actually typed something new
+    const emailChanged = prevEmailRef.current !== email;
+    const passwordChanged = prevPasswordRef.current !== password;
+
+    if ((emailChanged || passwordChanged) && error) {
+      clearError();
+    }
+
+    // Update refs for next comparison
+    prevEmailRef.current = email;
+    prevPasswordRef.current = password;
+  }, [email, password, error, clearError]);
 
   /**
    * Handle email/password form submission
