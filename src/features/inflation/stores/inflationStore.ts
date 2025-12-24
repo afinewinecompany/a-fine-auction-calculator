@@ -13,6 +13,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import type { Position, PositionInflationRate, TierInflationRate } from '../types/inflation.types';
 import {
   PlayerTier,
@@ -496,17 +497,19 @@ export const useInflationStore = create<InflationStore>()(
 /**
  * Combined selector for InflationTracker component.
  * Recommended for components that need multiple pieces of inflation state.
- * Single subscription = better performance than multiple individual selectors.
+ * Uses useShallow to prevent infinite re-renders from object reference changes.
  */
 export const useInflationTrackerData = () =>
-  useInflationStore(state => ({
-    inflationRate: state.overallRate,
-    positionRates: state.positionRates,
-    tierRates: state.tierRates,
-    isCalculating: state.isCalculating,
-    lastUpdated: state.lastUpdated,
-    error: state.error,
-  }));
+  useInflationStore(
+    useShallow(state => ({
+      inflationRate: state.overallRate,
+      positionRates: state.positionRates,
+      tierRates: state.tierRates,
+      isCalculating: state.isCalculating,
+      lastUpdated: state.lastUpdated,
+      error: state.error,
+    }))
+  );
 
 /**
  * Get overall inflation rate

@@ -7,11 +7,12 @@
  * Story: 8.1 - Create InflationTracker Component
  * Story: 8.2 - Display Current Inflation Rate Percentage
  *
- * Code Review Fix: Uses single combined selector to avoid multiple store subscriptions.
- * This is more performant than using multiple individual selector hooks.
+ * Code Review Fix: Uses single combined selector with useShallow to avoid
+ * multiple store subscriptions and prevent infinite re-renders.
  * @see https://docs.pmnd.rs/zustand/guides/prevent-rerenders-with-use-shallow
  */
 
+import { useShallow } from 'zustand/react/shallow';
 import { useInflationStore } from '@/features/inflation/stores/inflationStore';
 import type { Position, Tier } from '@/features/inflation/types/inflation.types';
 
@@ -55,16 +56,18 @@ export interface InflationTrackerData {
  * ```
  */
 export function useInflationTracker(): InflationTrackerData {
-  // Single combined selector - more performant than multiple individual selectors
-  // Each individual selector creates a separate subscription to the store
-  return useInflationStore(state => ({
-    inflationRate: state.overallRate,
-    positionRates: state.positionRates,
-    tierRates: state.tierRates,
-    isCalculating: state.isCalculating,
-    lastUpdated: state.lastUpdated,
-    error: state.error,
-  }));
+  // useShallow prevents infinite re-renders by doing shallow comparison
+  // Without it, a new object is created on every render, causing React error #185
+  return useInflationStore(
+    useShallow(state => ({
+      inflationRate: state.overallRate,
+      positionRates: state.positionRates,
+      tierRates: state.tierRates,
+      isCalculating: state.isCalculating,
+      lastUpdated: state.lastUpdated,
+      error: state.error,
+    }))
+  );
 }
 
 export default useInflationTracker;
