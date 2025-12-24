@@ -100,7 +100,7 @@ export function LeagueCard({ league }: LeagueCardProps) {
   };
 
   return (
-    <Card className="border-slate-800 bg-slate-900 hover:border-emerald-400/50 focus-within:border-emerald-400/50 transition-colors">
+    <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 hover:border-emerald-500/50 focus-within:border-emerald-500/50 transition-all shadow-xl backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="text-white text-lg font-semibold">{league.name}</CardTitle>
       </CardHeader>
