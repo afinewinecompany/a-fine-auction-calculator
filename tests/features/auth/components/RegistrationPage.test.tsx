@@ -14,6 +14,7 @@ import { act } from 'react';
 
 // Mock the auth store
 const mockSignUp = vi.fn();
+const mockSignInWithGoogle = vi.fn();
 const mockClearError = vi.fn();
 let mockIsAuthenticated = false;
 let mockIsLoading = false;
@@ -22,6 +23,7 @@ let mockError: string | null = null;
 vi.mock('@/features/auth/stores/authStore', () => ({
   useAuthStore: () => ({
     signUp: mockSignUp,
+    signInWithGoogle: mockSignInWithGoogle,
     isLoading: mockIsLoading,
     error: mockError,
     clearError: mockClearError,
@@ -52,7 +54,8 @@ const renderWithRouter = (component: React.ReactNode) => {
 // Helper to get form fields (using more specific selectors)
 const getEmailInput = () => screen.getByRole('textbox', { name: /email/i });
 const getPasswordInput = () => screen.getByPlaceholderText(/create a password/i);
-const getSubmitButton = () => screen.getByRole('button', { name: /create account/i });
+const getSubmitButton = () => screen.getByRole('button', { name: /create account with email/i });
+const getGoogleButton = () => screen.getByRole('button', { name: /sign up with google/i });
 
 describe('RegistrationPage', () => {
   beforeEach(() => {
@@ -73,6 +76,18 @@ describe('RegistrationPage', () => {
       expect(getEmailInput()).toBeInTheDocument();
       expect(getPasswordInput()).toBeInTheDocument();
       expect(getSubmitButton()).toBeInTheDocument();
+    });
+
+    it('should render Google OAuth button', () => {
+      renderWithRouter(<RegistrationPage />);
+
+      expect(getGoogleButton()).toBeInTheDocument();
+    });
+
+    it('should render divider between OAuth and email form', () => {
+      renderWithRouter(<RegistrationPage />);
+
+      expect(screen.getByText(/or continue with email/i)).toBeInTheDocument();
     });
 
     it('should render page title and description', () => {
@@ -360,6 +375,41 @@ describe('RegistrationPage', () => {
       await waitFor(() => {
         expect(mockNavigate).toHaveBeenCalledWith('/leagues', { replace: true });
       });
+    });
+  });
+
+  describe('Google OAuth', () => {
+    it('should call signInWithGoogle when Google button is clicked', async () => {
+      mockSignInWithGoogle.mockResolvedValue({ success: true });
+      const user = userEvent.setup();
+      renderWithRouter(<RegistrationPage />);
+
+      await user.click(getGoogleButton());
+
+      await waitFor(() => {
+        expect(mockSignInWithGoogle).toHaveBeenCalled();
+      });
+    });
+
+    it('should clear error before Google sign up', async () => {
+      mockSignInWithGoogle.mockResolvedValue({ success: true });
+      mockError = 'Previous error';
+      const user = userEvent.setup();
+      renderWithRouter(<RegistrationPage />);
+
+      await user.click(getGoogleButton());
+
+      await waitFor(() => {
+        expect(mockClearError).toHaveBeenCalled();
+      });
+    });
+
+    it('should disable Google button when loading', () => {
+      mockIsLoading = true;
+      renderWithRouter(<RegistrationPage />);
+
+      const googleButton = screen.getByRole('button', { name: /signing up/i });
+      expect(googleButton).toBeDisabled();
     });
   });
 
