@@ -8,6 +8,7 @@
  */
 
 import { useParams } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import { DraftSummary } from '../components/DraftSummary';
 import { useDraftStore } from '../stores/draftStore';
 import { useInflationStore } from '@/features/inflation';
@@ -25,14 +26,16 @@ export function DraftSummaryPage() {
   const getDraft = useDraftStore(state => state.getDraft);
   const draftState = leagueId ? getDraft(leagueId) : undefined;
 
-  // Get inflation state
-  const inflationState = useInflationStore(state => ({
-    overallRate: state.overallRate,
-    positionRates: state.positionRates,
-    tierRates: state.tierRates,
-    budgetDepleted: state.budgetDepleted,
-    playersRemaining: state.playersRemaining,
-  }));
+  // Get inflation state - useShallow prevents infinite re-renders
+  const inflationState = useInflationStore(
+    useShallow(state => ({
+      overallRate: state.overallRate,
+      positionRates: state.positionRates,
+      tierRates: state.tierRates,
+      budgetDepleted: state.budgetDepleted,
+      playersRemaining: state.playersRemaining,
+    }))
+  );
 
   // Build props from store data or use defaults
   const roster: DraftedPlayer[] =
