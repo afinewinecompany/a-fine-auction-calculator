@@ -247,8 +247,20 @@ export function RegistrationPage() {
   // Show email confirmation message if required
   if (emailConfirmationRequired) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-950 p-4">
-        <Card className="w-full max-w-md bg-slate-900 border-slate-800">
+      <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-4 overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div
+            className="absolute top-40 right-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+            style={{ animationDelay: '1s' }}
+          ></div>
+          <div
+            className="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+            style={{ animationDelay: '2s' }}
+          ></div>
+        </div>
+        <Card className="relative z-10 w-full max-w-md bg-slate-900/80 border-slate-800 backdrop-blur-sm shadow-2xl">
           <CardHeader className="space-y-1 text-center">
             <div className="mx-auto w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
               <CheckCircle2 className="w-6 h-6 text-emerald-500" />
@@ -283,8 +295,20 @@ export function RegistrationPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-950 p-4">
-      <Card className="w-full max-w-md bg-slate-900 border-slate-800">
+    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-4 overflow-hidden">
+      {/* Animated background orbs */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div
+          className="absolute top-40 right-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+          style={{ animationDelay: '1s' }}
+        ></div>
+        <div
+          className="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+          style={{ animationDelay: '2s' }}
+        ></div>
+      </div>
+      <Card className="relative z-10 w-full max-w-md bg-slate-900/80 border-slate-800 backdrop-blur-sm shadow-2xl">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-white">Create an account</CardTitle>
           <CardDescription className="text-slate-400">
@@ -331,7 +355,7 @@ export function RegistrationPage() {
                 <span className="w-full border-t border-slate-700" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-slate-900 px-2 text-slate-500">Or continue with email</span>
+                <span className="bg-slate-900/80 px-2 text-slate-500">Or continue with email</span>
               </div>
             </div>
 

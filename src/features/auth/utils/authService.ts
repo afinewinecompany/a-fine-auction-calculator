@@ -476,11 +476,40 @@ export const handleOAuthCallback = async (): Promise<OAuthCallbackResponse> => {
   try {
     const supabase = getSupabase();
 
-    // Get session from Supabase - it automatically handles the OAuth callback
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
+    // Check for PKCE code in URL query params (authorization code flow)
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    let session = null;
+    let sessionError = null;
+
+    if (code) {
+      // PKCE flow: exchange authorization code for session
+      // This is the secure OAuth 2.0 flow that Supabase uses
+      if (import.meta.env.DEV) {
+        console.log('[OAuth] Exchanging authorization code for session');
+      }
+      const result = await supabase.auth.exchangeCodeForSession(code);
+      session = result.data.session;
+      sessionError = result.error;
+    } else {
+      // Implicit flow or already established session
+      // Check for access_token in hash (legacy implicit flow)
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token')) {
+        // For implicit flow, we need to let Supabase process the hash
+        // by getting the session after a short delay to allow auto-processing
+        if (import.meta.env.DEV) {
+          console.log('[OAuth] Processing implicit flow tokens from hash');
+        }
+        // Give Supabase a moment to process the hash fragment
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
+      const result = await supabase.auth.getSession();
+      session = result.data.session;
+      sessionError = result.error;
+    }
 
     if (sessionError) {
       if (import.meta.env.DEV) {
@@ -494,6 +523,9 @@ export const handleOAuthCallback = async (): Promise<OAuthCallbackResponse> => {
 
     if (!session) {
       // No session means no OAuth callback to process
+      if (import.meta.env.DEV) {
+        console.log('[OAuth] No session found after callback processing');
+      }
       return {
         success: false,
         error: 'No active session found',

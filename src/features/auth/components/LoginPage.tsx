@@ -191,24 +191,28 @@ export function LoginPage() {
       oauthProcessedRef.current = true;
       setIsProcessingOAuth(true);
 
-      // Clean up URL first to prevent re-processing on re-renders
-      // Preserve the returnTo parameter in the clean URL
-      const cleanUrl = returnTo
-        ? `${window.location.pathname}?returnTo=${encodeURIComponent(returnTo)}`
-        : window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-
       try {
         // If OAuth returned an error directly in the URL, set it without calling handleOAuthCallback
         if (callbackInfo.hasError && callbackInfo.errorDescription) {
           // Let the auth store know about the error
           useAuthStore.getState().setError(callbackInfo.errorDescription);
+          // Clean URL after error handling
+          const cleanUrl = returnTo
+            ? `${window.location.pathname}?returnTo=${encodeURIComponent(returnTo)}`
+            : window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
           return;
         }
 
         // Process the OAuth callback through the store
-        // This retrieves the session that Supabase has already established
+        // IMPORTANT: Don't clean URL before this - Supabase needs the tokens/code
         const result = await handleOAuthCallback();
+
+        // Clean up URL AFTER processing to prevent re-processing on navigation
+        const cleanUrl = returnTo
+          ? `${window.location.pathname}?returnTo=${encodeURIComponent(returnTo)}`
+          : window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
 
         if (result.success) {
           navigate(getRedirectUrl(returnTo), { replace: true });
@@ -293,8 +297,20 @@ export function LoginPage() {
   // Show loading state while processing OAuth callback
   if (isProcessingOAuth) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-950 p-4">
-        <Card className="w-full max-w-md bg-slate-900 border-slate-800">
+      <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-4 overflow-hidden">
+        {/* Animated background orbs */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div
+            className="absolute top-40 right-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+            style={{ animationDelay: '1s' }}
+          ></div>
+          <div
+            className="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+            style={{ animationDelay: '2s' }}
+          ></div>
+        </div>
+        <Card className="relative z-10 w-full max-w-md bg-slate-900/80 border-slate-800 backdrop-blur-sm shadow-2xl">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mb-4" />
             <p className="text-slate-300 text-center">Completing sign in...</p>
@@ -305,8 +321,20 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-950 p-4">
-      <Card className="w-full max-w-md bg-slate-900 border-slate-800">
+    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-4 overflow-hidden">
+      {/* Animated background orbs */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div
+          className="absolute top-40 right-10 w-72 h-72 bg-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+          style={{ animationDelay: '1s' }}
+        ></div>
+        <div
+          className="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"
+          style={{ animationDelay: '2s' }}
+        ></div>
+      </div>
+      <Card className="relative z-10 w-full max-w-md bg-slate-900/80 border-slate-800 backdrop-blur-sm shadow-2xl">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-white">Welcome back</CardTitle>
           <CardDescription className="text-slate-400">
@@ -353,7 +381,7 @@ export function LoginPage() {
                 <span className="w-full border-t border-slate-700" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-slate-900 px-2 text-slate-500">Or continue with email</span>
+                <span className="bg-slate-900/80 px-2 text-slate-500">Or continue with email</span>
               </div>
             </div>
 
