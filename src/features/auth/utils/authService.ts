@@ -182,17 +182,18 @@ export const signIn = async (credentials: SignInCredentials): Promise<AuthRespon
     // Load user profile from users table after successful authentication
     // This ensures we have the full user profile (display_name, avatar_url, etc.)
     // not just the auth user data from Supabase Auth
+    // Note: Use .maybeSingle() instead of .single() to avoid 406 errors when profile doesn't exist yet
     if (data.user && data.session) {
       try {
-        const { data: userProfile } = await supabase
+        const { data: userProfile, error: profileError } = await supabase
           .from('users')
-          .select('*')
+          .select('display_name, avatar_url, is_admin')
           .eq('id', data.user.id)
-          .single();
+          .maybeSingle();
 
         // Merge profile data into user_metadata of the auth user
         // This preserves the Supabase User type while adding profile data
-        if (userProfile) {
+        if (userProfile && !profileError) {
           const enrichedUser = {
             ...data.user,
             user_metadata: {
@@ -209,7 +210,7 @@ export const signIn = async (credentials: SignInCredentials): Promise<AuthRespon
           };
         }
 
-        // Profile not found - return auth user as-is
+        // Profile not found or query failed - return auth user as-is
         return {
           success: true,
           user: data.user,
@@ -534,15 +535,16 @@ export const handleOAuthCallback = async (): Promise<OAuthCallbackResponse> => {
 
     // Session exists - load user profile from users table
     // The handle_new_user() trigger from Story 2.1 auto-creates the profile
+    // Note: Use .maybeSingle() instead of .single() to avoid 406 errors when profile doesn't exist yet
     try {
-      const { data: userProfile } = await supabase
+      const { data: userProfile, error: profileError } = await supabase
         .from('users')
-        .select('*')
+        .select('display_name, avatar_url, is_admin')
         .eq('id', session.user.id)
-        .single();
+        .maybeSingle();
 
-      // Merge profile data into user_metadata
-      if (userProfile) {
+      // Merge profile data into user_metadata if profile exists
+      if (userProfile && !profileError) {
         const enrichedUser = {
           ...session.user,
           user_metadata: {
@@ -560,18 +562,21 @@ export const handleOAuthCallback = async (): Promise<OAuthCallbackResponse> => {
         };
       }
 
-      // Profile not found yet (trigger may be processing)
-      // Return auth user data as-is
+      // Profile not found yet (trigger may be processing) or query failed
+      // Return auth user data as-is (graceful degradation)
+      if (import.meta.env.DEV && profileError) {
+        console.warn('[OAuth] Profile lookup failed:', profileError.message);
+      }
       return {
         success: true,
         user: session.user,
         session,
       };
-    } catch (profileError) {
-      // Profile lookup failed but session is valid
+    } catch (profileErr) {
+      // Profile lookup threw exception but session is valid
       // Return success with auth user data (graceful degradation)
       if (import.meta.env.DEV) {
-        console.warn('[OAuth] Profile lookup failed, using auth user data:', profileError);
+        console.warn('[OAuth] Profile lookup exception, using auth user data:', profileErr);
       }
       return {
         success: true,

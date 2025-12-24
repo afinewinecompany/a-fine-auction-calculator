@@ -42,6 +42,7 @@ const createMockSupabase = () => ({
     select: vi.fn(() => ({
       eq: vi.fn(() => ({
         single: vi.fn(),
+        maybeSingle: vi.fn(),
       })),
     })),
     update: vi.fn(() => ({
@@ -71,7 +72,9 @@ describe('profileStore', () => {
 
     // Create fresh mock
     mockSupabase = createMockSupabase();
-    vi.mocked(getSupabase).mockReturnValue(mockSupabase as unknown as ReturnType<typeof getSupabase>);
+    vi.mocked(getSupabase).mockReturnValue(
+      mockSupabase as unknown as ReturnType<typeof getSupabase>
+    );
     vi.mocked(isSupabaseConfigured).mockReturnValue(true);
   });
 
@@ -108,9 +111,9 @@ describe('profileStore', () => {
 
   describe('fetchProfile action', () => {
     it('should fetch and set profile on success', async () => {
-      // Setup mock to return profile
-      const mockSingle = vi.fn().mockResolvedValue({ data: mockProfile, error: null });
-      const mockEq = vi.fn(() => ({ single: mockSingle }));
+      // Setup mock to return profile (using maybeSingle)
+      const mockMaybeSingle = vi.fn().mockResolvedValue({ data: mockProfile, error: null });
+      const mockEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }));
       const mockSelect = vi.fn(() => ({ eq: mockEq }));
       mockSupabase.from = vi.fn(() => ({ select: mockSelect })) as typeof mockSupabase.from;
 
@@ -126,12 +129,12 @@ describe('profileStore', () => {
     });
 
     it('should set error on fetch failure', async () => {
-      // Setup mock to return error
-      const mockSingle = vi.fn().mockResolvedValue({
+      // Setup mock to return error (using maybeSingle)
+      const mockMaybeSingle = vi.fn().mockResolvedValue({
         data: null,
         error: { message: 'Profile not found' },
       });
-      const mockEq = vi.fn(() => ({ single: mockSingle }));
+      const mockEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }));
       const mockSelect = vi.fn(() => ({ eq: mockEq }));
       mockSupabase.from = vi.fn(() => ({ select: mockSelect })) as typeof mockSupabase.from;
 
@@ -152,8 +155,8 @@ describe('profileStore', () => {
         resolvePromise = resolve;
       });
 
-      const mockSingle = vi.fn(() => fetchPromise);
-      const mockEq = vi.fn(() => ({ single: mockSingle }));
+      const mockMaybeSingle = vi.fn(() => fetchPromise);
+      const mockEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }));
       const mockSelect = vi.fn(() => ({ eq: mockEq }));
       mockSupabase.from = vi.fn(() => ({ select: mockSelect })) as typeof mockSupabase.from;
 
@@ -197,14 +200,14 @@ describe('profileStore', () => {
         result.current.setProfile(mockProfile);
       });
 
-      // Setup mocks for update
+      // Setup mocks for update (using maybeSingle for refetch)
       const mockUpdateEq = vi.fn().mockResolvedValue({ error: null });
       const mockUpdate = vi.fn(() => ({ eq: mockUpdateEq }));
-      const mockSingle = vi.fn().mockResolvedValue({
+      const mockMaybeSingle = vi.fn().mockResolvedValue({
         data: { ...mockProfile, display_name: 'New Name' },
         error: null,
       });
-      const mockSelectEq = vi.fn(() => ({ single: mockSingle }));
+      const mockSelectEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }));
       const mockSelect = vi.fn(() => ({ eq: mockSelectEq }));
 
       mockSupabase.from = vi.fn((table: string) => {
@@ -257,8 +260,8 @@ describe('profileStore', () => {
 
       const mockUpdateEq = vi.fn().mockResolvedValue({ error: null });
       const mockUpdate = vi.fn(() => ({ eq: mockUpdateEq }));
-      const mockSingle = vi.fn().mockResolvedValue({ data: mockProfile, error: null });
-      const mockSelectEq = vi.fn(() => ({ single: mockSingle }));
+      const mockMaybeSingle = vi.fn().mockResolvedValue({ data: mockProfile, error: null });
+      const mockSelectEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }));
       const mockSelect = vi.fn(() => ({ eq: mockSelectEq }));
 
       mockSupabase.from = vi.fn(() => ({
@@ -295,14 +298,14 @@ describe('profileStore', () => {
         getPublicUrl: mockGetPublicUrl,
       }));
 
-      // Setup profile update mock
+      // Setup profile update mock (using maybeSingle for refetch)
       const mockUpdateEq = vi.fn().mockResolvedValue({ error: null });
       const mockUpdate = vi.fn(() => ({ eq: mockUpdateEq }));
-      const mockSingle = vi.fn().mockResolvedValue({
+      const mockMaybeSingle = vi.fn().mockResolvedValue({
         data: { ...mockProfile, avatar_url: 'https://example.com/new-avatar.jpg' },
         error: null,
       });
-      const mockSelectEq = vi.fn(() => ({ single: mockSingle }));
+      const mockSelectEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }));
       const mockSelect = vi.fn(() => ({ eq: mockSelectEq }));
 
       mockSupabase.from = vi.fn(() => ({

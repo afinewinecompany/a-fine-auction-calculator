@@ -35,9 +35,21 @@ const initialState = {
 
 /**
  * Map Supabase errors to user-friendly messages
+ * @param errorMessage - The error message from Supabase
+ * @param statusCode - Optional HTTP status code for better error mapping
  */
-const mapLeagueError = (errorMessage: string): string => {
+const mapLeagueError = (errorMessage: string, statusCode?: number): string => {
   const lowerMessage = errorMessage.toLowerCase();
+
+  // Handle 409 Conflict (duplicate key/unique constraint violation)
+  if (
+    statusCode === 409 ||
+    lowerMessage.includes('duplicate') ||
+    lowerMessage.includes('unique') ||
+    lowerMessage.includes('conflict')
+  ) {
+    return 'A league with this configuration already exists. Please try a different name.';
+  }
 
   if (lowerMessage.includes('not found') || lowerMessage.includes('no rows')) {
     return 'League not found';
@@ -49,10 +61,6 @@ const mapLeagueError = (errorMessage: string): string => {
 
   if (lowerMessage.includes('network') || lowerMessage.includes('fetch')) {
     return 'Unable to connect. Please check your internet connection.';
-  }
-
-  if (lowerMessage.includes('duplicate') || lowerMessage.includes('unique')) {
-    return 'A league with this name already exists';
   }
 
   if (lowerMessage.includes('foreign key') || lowerMessage.includes('reference')) {
@@ -243,9 +251,12 @@ export const useLeagueStore = create<LeagueStore>((set, get) => ({
         .single();
 
       if (error) {
+        // Extract status code from error if available (Supabase PostgrestError has 'code' property)
+        // For HTTP errors like 409, the code may be in error.code or we detect from message
+        const statusCode = error.code === '23505' ? 409 : undefined; // 23505 is PostgreSQL unique_violation
         set({
           isCreating: false,
-          error: mapLeagueError(error.message),
+          error: mapLeagueError(error.message, statusCode),
         });
         return null;
       }

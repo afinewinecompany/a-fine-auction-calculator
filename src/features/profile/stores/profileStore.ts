@@ -90,6 +90,8 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
 
   /**
    * Fetch profile data from users table
+   * Note: Uses .maybeSingle() to avoid 406 errors when profile doesn't exist yet
+   * (e.g., race condition with handle_new_user() trigger after OAuth signup)
    */
   fetchProfile: async (userId: string): Promise<void> => {
     if (!isSupabaseConfigured()) {
@@ -105,13 +107,24 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         .from('users')
         .select('id, email, display_name, avatar_url, onboarding_completed, created_at, updated_at')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         set({
           profile: null,
           isLoading: false,
           error: mapProfileError(error.message),
+        });
+        return;
+      }
+
+      // Profile may be null if user record doesn't exist yet (trigger still processing)
+      // This is a valid state - the profile will be fetched on next attempt
+      if (!data) {
+        set({
+          profile: null,
+          isLoading: false,
+          error: null, // Not an error, just not ready yet
         });
         return;
       }
@@ -182,7 +195,7 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         .from('users')
         .select('id, email, display_name, avatar_url, onboarding_completed, created_at, updated_at')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (refreshedProfile) {
         set({
